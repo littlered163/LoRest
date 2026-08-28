@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Leaf, Bluetooth, Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 import { TOTAL_WEEKS, DEFAULT_DUE_DATE } from "@/lib/lorest/sleep";
@@ -24,8 +24,7 @@ const PRIMARY_STYLE = {
 export function OnboardingScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const user = useEazo((s) => s.auth.user);
-  const loading = useEazo((s) => s.auth.loading);
+  const { user, loading } = useAuth();
 
   const [step, setStep] = useState(1);
   const [busy, setBusy] = useState(false);

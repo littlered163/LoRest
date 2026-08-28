@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BedDouble, ChevronRight, Moon, Waves } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 import { ScoreRing } from "@/components/lorest/score-ring";
@@ -15,7 +15,7 @@ export default function TodayPage() {
   const { t, i18n } = useTranslation();
   const zh = (i18n.resolvedLanguage || i18n.language).startsWith("zh");
   const router = useRouter();
-  const user = useEazo((s) => s.auth.user);
+  const { user } = useAuth();
   const name = displayName(user);
   const { primary, syncing } = useDevices();
   const online = primary?.online ?? false;

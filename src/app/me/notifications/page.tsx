@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BedDouble, CalendarCheck, FileBarChart } from "lucide-react";
 import { toast } from "sonner";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { MeSubHeader } from "@/components/lorest/me-sub-header";
 import { fetchPrefs, savePrefs, type NotificationPrefKey } from "@/lib/api";
@@ -17,7 +17,7 @@ const ROWS: Array<{ key: NotificationPrefKey; Icon: typeof BedDouble }> = [
 
 export default function NotificationsPage() {
   const { t } = useTranslation();
-  const user = useEazo((s) => s.auth.user);
+  const { user } = useAuth();
   const [prefs, setPrefs] = useState({ bedtime: true, checkup: true, weekly: true });
 
   useEffect(() => {

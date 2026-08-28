@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { CalendarCheck, Check, Circle, Baby, Scale, Smile, UserRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { auth } from "@eazo/sdk";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 import { TOTAL_WEEKS, WEEK_TIPS, weekInfo } from "@/lib/lorest/sleep";
@@ -25,7 +24,7 @@ function EmptyHint({ text }: { text: string }) {
 export function PregnancyScreen() {
   const { t, i18n } = useTranslation();
   const zh = (i18n.resolvedLanguage || i18n.language).startsWith("zh");
-  const user = useEazo((s) => s.auth.user);
+  const { user } = useAuth();
 
   const [week, setWeek] = useState(24);
   const [weightKg, setWeightKg] = useState<string | null>(null);
@@ -84,9 +83,8 @@ export function PregnancyScreen() {
       </header>
 
       {!user && (
-        <button
-          type="button"
-          onClick={() => auth.login().catch(() => undefined)}
+        <a
+          href="/login"
           data-el="pregnancy-sign-in"
           className="lorest-card mb-4 flex w-full items-center gap-3 p-4 text-left"
         >
@@ -94,7 +92,7 @@ export function PregnancyScreen() {
             <UserRound className="h-5 w-5 text-[#8E6A5E]" aria-hidden />
           </span>
           <span className="text-[13px] leading-snug text-[#6E625C]">{t("me.signInTip")}</span>
-        </button>
+        </a>
       )}
 
       <section className="lorest-card lorest-card-strong p-[18px]" data-el="pregnancy-baby">

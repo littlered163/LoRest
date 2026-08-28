@@ -4,30 +4,39 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Leaf, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { auth } from "@eazo/sdk";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth, type User } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
+
+function makeToken(user: User): string {
+  return Buffer.from(JSON.stringify(user)).toString("base64");
+}
 
 export default function LoginPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const user = useEazo((s) => s.auth.user);
-  const loading = useEazo((s) => s.auth.loading);
+  const { user, loading, login } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
-  // Already signed in → return to home.
   useEffect(() => {
     if (!loading && user) router.replace("/");
   }, [user, loading, router]);
 
   const signIn = () => {
+    if (!email.trim()) return;
     setBusy(true);
-    auth
-      .login()
-      .then(() => router.replace("/"))
-      .catch(() => undefined)
-      .finally(() => setBusy(false));
+    const newUser: User = {
+      id: btoa(email.trim()).replace(/[^a-zA-Z0-9]/g, "").slice(0, 32),
+      email: email.trim(),
+      name: name.trim() || null,
+      avatarUrl: null,
+    };
+    const token = makeToken(newUser);
+    login(newUser, token);
+    router.replace("/");
+    setBusy(false);
   };
 
   return (
@@ -67,11 +76,25 @@ export default function LoginPage() {
           </ul>
         </div>
 
-        <div className="pb-8">
+        <div className="grid gap-3 pb-8">
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={t("login.namePlaceholder") || "昵称（可选）"}
+            className="rounded-2xl border border-border bg-white/60 px-4 py-3 text-[15px] outline-none focus:border-[#AEC2CE]"
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t("login.emailPlaceholder") || "邮箱"}
+            className="rounded-2xl border border-border bg-white/60 px-4 py-3 text-[15px] outline-none focus:border-[#AEC2CE]"
+          />
           <button
             type="button"
             onClick={signIn}
-            disabled={busy}
+            disabled={busy || !email.trim()}
             className="flex w-full items-center justify-center rounded-full py-3.5 text-[15px] font-semibold text-white transition-opacity disabled:opacity-60"
             style={{
               background: "linear-gradient(90deg,#AEC2CE,#9CB79A)",
@@ -80,7 +103,7 @@ export default function LoginPage() {
           >
             {busy ? t("login.signingIn") : t("login.signIn")}
           </button>
-          <p className="mt-3.5 text-center text-[12px] leading-[1.6] text-muted-foreground">
+          <p className="mt-1 text-center text-[12px] leading-[1.6] text-muted-foreground">
             {t("login.hint")}
           </p>
         </div>

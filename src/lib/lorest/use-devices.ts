@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth } from "@/lib/auth/local-auth";
 import { fetchDevices, syncDeviceApi, type DeviceDto } from "@/lib/api";
 
 /**
@@ -10,7 +10,7 @@ import { fetchDevices, syncDeviceApi, type DeviceDto } from "@/lib/api";
  * opened → mattress syncs" behavior, and surfaces a transient `syncing` flag.
  */
 export function useDevices() {
-  const user = useEazo((s) => s.auth.user);
+  const { user } = useAuth();
   const [devices, setDevices] = useState<DeviceDto[] | null>(null);
   const [syncing, setSyncing] = useState(false);
   const syncedFor = useRef<string | null>(null);

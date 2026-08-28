@@ -2,20 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth } from "@/lib/auth/local-auth";
 import { fetchProfile } from "@/lib/api";
 
-/**
- * After login, ensures new users complete onboarding (pregnancy profile +
- * device pairing) before reaching the main app. A user who has never set
- * `onboarded` is redirected to /onboarding. Runs once per signed-in user.
- * Skipped on /login and /onboarding themselves.
- */
 export function OnboardingGate() {
   const router = useRouter();
   const pathname = usePathname();
-  const user = useEazo((s) => s.auth.user);
-  const loading = useEazo((s) => s.auth.loading);
+  const { user, loading } = useAuth();
   const checkedUserId = useRef<string | null>(null);
 
   useEffect(() => {

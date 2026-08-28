@@ -12,8 +12,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import { auth } from "@eazo/sdk";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 import { DEFAULT_DUE_DATE, displayName } from "@/lib/lorest/sleep";
@@ -21,7 +20,7 @@ import { fetchProfile } from "@/lib/api";
 
 export default function MePage() {
   const { t } = useTranslation();
-  const user = useEazo((s) => s.auth.user);
+  const { user, logout } = useAuth();
   const name = displayName(user);
 
   const [week, setWeek] = useState(24);
@@ -108,7 +107,7 @@ export default function MePage() {
       {user && (
         <button
           type="button"
-          onClick={() => auth.logout()}
+          onClick={() => logout()}
           data-el="me-sign-out"
           className="lorest-card mt-4 flex w-full items-center justify-center gap-2 px-[18px] py-4 text-[15px] font-medium text-[#C9857B]"
         >

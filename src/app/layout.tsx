@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Inter, Noto_Serif_SC } from "next/font/google";
-import { EazoProvider } from "@eazo/sdk/react";
+import { AuthProvider } from "@/lib/auth/local-auth";
 import { cn } from "@/utils/utils";
 import { Toaster } from "@/components/ui/sonner";
-import { UserSyncEffect } from "@/components/user-profile/user-sync-effect";
 import { OnboardingGate } from "@/components/lorest/onboarding-gate";
 import { I18nProvider } from "@/components/i18n/i18n-provider";
 import { LocaleSyncEffect } from "@/components/i18n/locale-sync-effect";
@@ -88,14 +87,13 @@ export default async function RootLayout({
         data-eazo-preview-inspector-runtime=""
       >
         <I18nProvider>
-          <EazoProvider>
+          <AuthProvider>
             <LocaleSyncEffect />
-            <UserSyncEffect />
             <OnboardingGate />
             {children}
             <Toaster />
             {INSPECTOR_ENABLED && <PreviewInspector />}
-          </EazoProvider>
+          </AuthProvider>
         </I18nProvider>
       </body>
     </html>

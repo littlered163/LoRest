@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useEazo } from "@eazo/sdk/react";
+import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { MeSubHeader } from "@/components/lorest/me-sub-header";
 import { TOTAL_WEEKS, DEFAULT_DUE_DATE } from "@/lib/lorest/sleep";
@@ -13,7 +13,7 @@ const MOODS = ["😊", "😌", "🥱", "😣", "🤗"];
 
 export default function PregnancySettingsPage() {
   const { t } = useTranslation();
-  const user = useEazo((s) => s.auth.user);
+  const { user } = useAuth();
 
   const [week, setWeek] = useState(24);
   const [dueDate, setDueDate] = useState(DEFAULT_DUE_DATE);

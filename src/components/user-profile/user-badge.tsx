@@ -4,14 +4,11 @@ import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { LogOut, UserRound, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { auth } from "@eazo/sdk";
-import { useEazo } from "@eazo/sdk/react";
-import type { User } from "@eazo/sdk";
+import { useAuth, type User } from "@/lib/auth/local-auth";
 
 export function UserBadge() {
   const { t } = useTranslation();
-  const user = useEazo((s) => s.auth.user);
-  const loading = useEazo((s) => s.auth.loading);
+  const { user, loading, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,9 +31,7 @@ export function UserBadge() {
   if (!user) {
     return (
       <button
-        onClick={() => {
-          auth.login().catch(() => undefined);
-        }}
+        onClick={() => window.location.href = "/login"}
         className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-sm font-medium shadow-sm transition-shadow hover:shadow-md"
       >
         <UserRound className="h-4 w-4 text-muted-foreground" />
@@ -52,7 +47,7 @@ export function UserBadge() {
         <DropdownPanel user={user} onClose={() => setOpen(false)} userIdLabel={t("common.userId")}>
           <button
             onClick={() => {
-              auth.logout();
+              logout();
               setOpen(false);
             }}
             className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"

@@ -7,6 +7,7 @@ import i18n, {
   resolveLocalePreference,
   syncDocumentLanguage,
 } from "@/i18n";
+// no eazo/sdk dependency — locale follows browser navigator only
 
 export function LocaleSyncEffect() {
   useEffect(() => {
