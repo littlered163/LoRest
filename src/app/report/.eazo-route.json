@@ -1,0 +1,9 @@
+{
+  "route": "report",
+  "name": "睡眠报告",
+  "nav_type": "stack",
+  "parent": "",
+  "order_index": 1,
+  "icon": "activity",
+  "summary": "整夜睡眠阶段、心率呼吸曲线、陪伴总结"
+}

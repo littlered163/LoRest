@@ -1,0 +1,9 @@
+{
+  "route": "me/pregnancy",
+  "name": "孕期设置",
+  "nav_type": "stack",
+  "parent": "me",
+  "order_index": 10,
+  "icon": "leaf",
+  "summary": "编辑预产期/孕周/体重/心情"
+}

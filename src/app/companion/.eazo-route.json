@@ -1,0 +1,8 @@
+{
+  "route": "companion",
+  "name": "陪伴",
+  "nav_type": "tab",
+  "order_index": 3,
+  "icon": "moon",
+  "summary": "睡前呼吸引导、助眠白噪音、晚安寄语"
+}

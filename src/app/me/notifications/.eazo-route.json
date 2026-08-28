@@ -1,0 +1,9 @@
+{
+  "route": "me/notifications",
+  "name": "通知提醒",
+  "nav_type": "stack",
+  "parent": "me",
+  "order_index": 11,
+  "icon": "bell",
+  "summary": "提醒开关"
+}

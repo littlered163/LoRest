@@ -1,0 +1,8 @@
+{
+  "route": "",
+  "name": "今日",
+  "nav_type": "tab",
+  "order_index": 0,
+  "icon": "circle",
+  "summary": "今日首页：睡眠评分环、概览、贴心建议"
+}

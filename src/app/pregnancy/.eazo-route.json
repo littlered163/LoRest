@@ -1,0 +1,8 @@
+{
+  "route": "pregnancy",
+  "name": "孕期",
+  "nav_type": "tab",
+  "order_index": 2,
+  "icon": "leaf",
+  "summary": "孕周进度、胎儿意象、本周贴士、产检待办"
+}
