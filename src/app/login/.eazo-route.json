@@ -1,0 +1,9 @@
+{
+  "route": "login",
+  "name": "登录",
+  "nav_type": "stack",
+  "parent": "",
+  "order_index": 7,
+  "icon": "log-in",
+  "summary": "登录 / 注册着陆页"
+}

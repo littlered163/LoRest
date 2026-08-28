@@ -1,0 +1,9 @@
+{
+  "route": "me/privacy",
+  "name": "隐私与数据",
+  "nav_type": "stack",
+  "parent": "me",
+  "order_index": 12,
+  "icon": "lock",
+  "summary": "数据说明与导出/清除"
+}

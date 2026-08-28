@@ -1,0 +1,90 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Leaf, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { auth } from "@eazo/sdk";
+import { useEazo } from "@eazo/sdk/react";
+import { ScreenShell } from "@/components/lorest/screen-shell";
+import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
+
+export default function LoginPage() {
+  const { t } = useTranslation();
+  const router = useRouter();
+  const user = useEazo((s) => s.auth.user);
+  const loading = useEazo((s) => s.auth.loading);
+  const [busy, setBusy] = useState(false);
+
+  // Already signed in → return to home.
+  useEffect(() => {
+    if (!loading && user) router.replace("/");
+  }, [user, loading, router]);
+
+  const signIn = () => {
+    setBusy(true);
+    auth
+      .login()
+      .then(() => router.replace("/"))
+      .catch(() => undefined)
+      .finally(() => setBusy(false));
+  };
+
+  return (
+    <ScreenShell withNav={false} label="荷眠登录">
+      <div className="flex min-h-[calc(100svh-var(--safe-top)-var(--safe-bottom))] flex-col">
+        <div className="flex justify-end pt-2">
+          <LorestLangToggle />
+        </div>
+
+        <div className="flex flex-1 flex-col items-center justify-center text-center">
+          <span
+            className="grid h-20 w-20 place-items-center rounded-full"
+            style={{
+              background: "radial-gradient(circle,#fff,#9CB79A 60%,#E4CDA0)",
+              boxShadow: "0 0 40px rgba(156,183,154,.6)",
+              animation: "lorest-breathe 4.7s var(--lorest-ease) infinite alternate",
+            }}
+            aria-hidden
+          >
+            <Leaf className="h-8 w-8 text-white/90" />
+          </span>
+
+          <h1 className="font-heading mt-7 text-[28px] font-semibold leading-[1.2] text-[#5F554F]">
+            {t("login.title")}
+          </h1>
+          <p className="mt-3 max-w-[19rem] text-[14px] leading-[1.7] text-[#776C66]">
+            {t("login.subtitle")}
+          </p>
+
+          <ul className="mt-7 grid w-full max-w-[19rem] gap-2.5 text-left">
+            {[t("login.perk1"), t("login.perk2"), t("login.perk3")].map((p) => (
+              <li key={p} className="lorest-card flex items-center gap-2.5 px-3.5 py-3 text-[13px] text-[#6E625C]">
+                <Sparkles className="h-4 w-4 shrink-0 text-[#C0972F]" aria-hidden />
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="pb-8">
+          <button
+            type="button"
+            onClick={signIn}
+            disabled={busy}
+            className="flex w-full items-center justify-center rounded-full py-3.5 text-[15px] font-semibold text-white transition-opacity disabled:opacity-60"
+            style={{
+              background: "linear-gradient(90deg,#AEC2CE,#9CB79A)",
+              boxShadow: "0 10px 30px rgba(174,194,206,.4)",
+            }}
+          >
+            {busy ? t("login.signingIn") : t("login.signIn")}
+          </button>
+          <p className="mt-3.5 text-center text-[12px] leading-[1.6] text-muted-foreground">
+            {t("login.hint")}
+          </p>
+        </div>
+      </div>
+    </ScreenShell>
+  );
+}

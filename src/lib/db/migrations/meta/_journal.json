@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1787915040786,
+      "tag": "0000_parallel_gambit",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787926374861,
+      "tag": "0001_closed_wendell_vaughn",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787929307163,
+      "tag": "0002_lying_swarm",
+      "breakpoints": true
+    }
+  ]
+}

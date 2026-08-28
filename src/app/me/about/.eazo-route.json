@@ -1,0 +1,9 @@
+{
+  "route": "me/about",
+  "name": "关于",
+  "nav_type": "stack",
+  "parent": "me",
+  "order_index": 13,
+  "icon": "info",
+  "summary": "版本与设备信息"
+}

@@ -1,0 +1,215 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-heading: var(--font-heading);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+body {
+  font-family: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
+  touch-action: manipulation;
+}
+
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+:root {
+  /* LoRest — 荷叶晨呼 · 低饱和莫奈叶绿 (lotus-leaf green, low-saturation) */
+  --bg-base: #EEF1E9;
+  --lorest-primary: #9CB79A;
+  --lorest-secondary: #AEC2CE;
+  --lorest-accent: #E4CDA0;
+  --lorest-deep: #6E8F6A;
+  --lorest-leaf: #5F8A5C;
+  --surface: rgba(252, 253, 248, 0.68);
+  --surface-strong: rgba(252, 253, 248, 0.85);
+  --lorest-ease: cubic-bezier(.2, .8, .2, 1);
+
+  --safe-top: max(20px, env(safe-area-inset-top, 0px));
+  --safe-bottom: max(34px, env(safe-area-inset-bottom, 0px));
+
+  --background: oklch(0.955 0.014 135);
+  --foreground: oklch(0.28 0.02 140);
+  --card: oklch(0.99 0.008 130 / 0.72);
+  --card-foreground: oklch(0.28 0.02 140);
+  --popover: oklch(0.99 0.008 130);
+  --popover-foreground: oklch(0.28 0.02 140);
+  --primary: oklch(0.76 0.05 145);
+  --primary-foreground: oklch(0.28 0.03 150);
+  --secondary: oklch(0.81 0.033 226);
+  --secondary-foreground: oklch(0.3 0.02 240);
+  --muted: oklch(0.93 0.012 130);
+  --muted-foreground: oklch(0.58 0.018 135);
+  --accent: oklch(0.87 0.06 92);
+  --accent-foreground: oklch(0.33 0.03 70);
+  --destructive: oklch(0.62 0.14 25);
+  --border: oklch(0.45 0.02 140 / 0.14);
+  --input: oklch(0.45 0.02 140 / 0.16);
+  --ring: oklch(0.7 0.06 145);
+  --chart-1: oklch(0.7 0.06 145);
+  --chart-2: oklch(0.81 0.033 226);
+  --chart-3: oklch(0.87 0.06 92);
+  --chart-4: oklch(0.6 0.05 150);
+  --chart-5: oklch(0.72 0.03 40);
+  --radius: 1rem;
+  --sidebar: oklch(0.97 0.01 132);
+  --sidebar-foreground: oklch(0.28 0.02 140);
+  --sidebar-primary: oklch(0.76 0.05 145);
+  --sidebar-primary-foreground: oklch(0.28 0.03 150);
+  --sidebar-accent: oklch(0.87 0.06 92);
+  --sidebar-accent-foreground: oklch(0.33 0.03 70);
+  --sidebar-border: oklch(0.45 0.02 140 / 0.14);
+  --sidebar-ring: oklch(0.7 0.06 145);
+}
+
+.dark {
+  --background: oklch(0.28 0.02 250);
+  --foreground: oklch(0.94 0.01 70);
+  --card: oklch(0.32 0.02 250 / 0.72);
+  --card-foreground: oklch(0.94 0.01 70);
+  --popover: oklch(0.32 0.02 250);
+  --popover-foreground: oklch(0.94 0.01 70);
+  --primary: oklch(0.84 0.045 24);
+  --primary-foreground: oklch(0.28 0.03 30);
+  --secondary: oklch(0.5 0.03 226);
+  --secondary-foreground: oklch(0.94 0.01 70);
+  --muted: oklch(0.4 0.015 250);
+  --muted-foreground: oklch(0.75 0.012 70);
+  --accent: oklch(0.72 0.05 92);
+  --accent-foreground: oklch(0.28 0.03 70);
+  --destructive: oklch(0.62 0.14 25);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.84 0.045 24);
+  --chart-1: oklch(0.84 0.045 24);
+  --chart-2: oklch(0.81 0.033 226);
+  --chart-3: oklch(0.87 0.06 92);
+  --chart-4: oklch(0.68 0.04 226);
+  --chart-5: oklch(0.72 0.03 40);
+  --sidebar: oklch(0.3 0.02 250);
+  --sidebar-foreground: oklch(0.94 0.01 70);
+  --sidebar-primary: oklch(0.84 0.045 24);
+  --sidebar-primary-foreground: oklch(0.28 0.03 30);
+  --sidebar-accent: oklch(0.72 0.05 92);
+  --sidebar-accent-foreground: oklch(0.28 0.03 70);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.84 0.045 24);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply text-foreground;
+    background: var(--bg-base);
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@layer components {
+  /* Warm-aura ambient ground shared across every LoRest screen */
+  .lorest-aura {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    overflow: hidden;
+    background: var(--bg-base);
+    pointer-events: none;
+  }
+  .lorest-aura::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 52% 40%, rgba(255, 255, 255, 0.5), transparent 26%),
+      linear-gradient(180deg, rgba(244, 239, 233, 0.35), rgba(244, 239, 233, 0.82) 88%);
+  }
+  .lorest-orb {
+    position: fixed;
+    z-index: -2;
+    border-radius: 9999px;
+    filter: blur(40px);
+    opacity: 0.5;
+    pointer-events: none;
+    animation: lorest-breathe 7s var(--lorest-ease) infinite alternate;
+  }
+  .lorest-card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 10px 30px rgba(124, 94, 77, 0.08);
+    border-radius: var(--radius-2xl);
+  }
+  .lorest-card-strong {
+    background: var(--surface-strong);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 22px 54px rgba(124, 94, 77, 0.14);
+  }
+  .font-heading {
+    font-family: var(--font-heading), serif;
+  }
+}
+
+@keyframes lorest-breathe {
+  from { transform: scale(0.94) translateY(10px); }
+  to { transform: scale(1.08) translateY(-8px); }
+}
+
+@keyframes lorest-draw {
+  to { stroke-dashoffset: var(--dash-to, 96); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lorest-orb { animation: none !important; }
+}

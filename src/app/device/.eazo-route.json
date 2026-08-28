@@ -1,0 +1,9 @@
+{
+  "route": "device",
+  "name": "设备",
+  "nav_type": "stack",
+  "order_index": 5,
+  "icon": "bed-double",
+  "summary": "床垫连接状态、环境数据、快捷跳转与设备管理（从今日首页进入）",
+  "parent": ""
+}
