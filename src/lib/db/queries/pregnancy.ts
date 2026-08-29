@@ -60,18 +60,55 @@ function generateDemoWeightLogs(userId: string) {
   return logs;
 }
 
-/** Read the profile; create a seeded one on first access. */
+/** Seed values so demo accounts always open with a complete pregnancy profile. */
+function demoProfileSeed() {
+  const lmp = new Date();
+  lmp.setDate(lmp.getDate() - 196); // ~28 weeks along
+  return {
+    pregnancyStartDate: lmp.toISOString().slice(0, 10),
+    initialWeightKg: "58",
+    heightCm: "165",
+    weightKg: "61.2",
+    onboarded: true,
+  };
+}
+
+/** Read the profile; create a fully seeded one on first access. */
 export async function getOrCreateProfile(userId: string): Promise<ProfileView> {
+  const isDemo = userId.startsWith("roadshow-demo-");
   const existing = await db
     .select()
     .from(pregnancyProfiles)
     .where(eq(pregnancyProfiles.userId, userId))
     .limit(1);
-  if (existing[0]) return toProfileDto(existing[0]);
+
+  // A demo account missing any seeded field (e.g. created before seeding
+  // existed, or only partly warmed by the login flow) gets backfilled with
+  // the seeded profile — keeping any values already set.
+  if (existing[0]) {
+    const row = existing[0];
+    if (isDemo && !(row.pregnancyStartDate && row.initialWeightKg && row.heightCm && row.weightKg && row.onboarded)) {
+      const seed = demoProfileSeed();
+      const fixed = await db
+        .update(pregnancyProfiles)
+        .set({
+          pregnancyStartDate: row.pregnancyStartDate ?? seed.pregnancyStartDate,
+          initialWeightKg: row.initialWeightKg ?? seed.initialWeightKg,
+          heightCm: row.heightCm ?? seed.heightCm,
+          weightKg: row.weightKg ?? seed.weightKg,
+          onboarded: true,
+          updatedAt: new Date(),
+        })
+        .where(eq(pregnancyProfiles.userId, userId))
+        .returning();
+      return toProfileDto(fixed[0]);
+    }
+    return toProfileDto(row);
+  }
 
   const inserted = await db
     .insert(pregnancyProfiles)
-    .values({ userId })
+    .values({ userId, ...(isDemo ? demoProfileSeed() : {}) })
     .onConflictDoNothing()
     .returning();
   if (inserted[0]) return toProfileDto(inserted[0]);
