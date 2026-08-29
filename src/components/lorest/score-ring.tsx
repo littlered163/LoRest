@@ -6,29 +6,31 @@ export function ScoreRing({
   label,
   size = 224,
   onClick,
+  empty,
 }: {
   score: number;
   label: string;
   size?: number;
   onClick?: () => void;
+  empty?: boolean;
 }) {
   const circumference = 2 * Math.PI * 88; // r = 88
-  const dashTo = circumference * (1 - score / 100);
-  const Wrapper: "button" | "div" = onClick ? "button" : "div";
+  const dashTo = empty ? circumference : circumference * (1 - score / 100);
+  const Wrapper: "button" | "div" = onClick && !empty ? "button" : "div";
 
   return (
     <Wrapper
-      onClick={onClick}
+      onClick={empty ? undefined : onClick}
       data-el="sleep-score-ring"
       className="relative grid place-items-center bg-transparent p-0"
       style={{
         width: `min(78vw, ${size}px)`,
         aspectRatio: "1",
         border: 0,
-        cursor: onClick ? "pointer" : "default",
+        cursor: onClick && !empty ? "pointer" : "default",
         WebkitTapHighlightColor: "transparent",
       }}
-      aria-label={`${label} ${score}`}
+      aria-label={empty ? label : `${label} ${score}`}
     >
       <svg
         viewBox="0 0 220 220"
@@ -44,26 +46,27 @@ export function ScoreRing({
           </linearGradient>
         </defs>
         <circle cx="110" cy="110" r="88" fill="none" stroke="rgba(255,255,255,.58)" strokeWidth="15" />
-        <circle
-          cx="110"
-          cy="110"
-          r="88"
-          fill="none"
-          stroke="url(#lorest-warm)"
-          strokeWidth="15"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          style={
-            {
-              strokeDashoffset: circumference,
-              transform: "rotate(-90deg)",
-              transformOrigin: "50% 50%",
-              animation: "lorest-draw 1.6s .25s var(--lorest-ease) forwards",
-              // custom prop consumed by the keyframe
-              ["--dash-to" as string]: `${dashTo}`,
-            } as React.CSSProperties
-          }
-        />
+        {!empty && (
+          <circle
+            cx="110"
+            cy="110"
+            r="88"
+            fill="none"
+            stroke="url(#lorest-warm)"
+            strokeWidth="15"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            style={
+              {
+                strokeDashoffset: circumference,
+                transform: "rotate(-90deg)",
+                transformOrigin: "50% 50%",
+                animation: "lorest-draw 1.6s .25s var(--lorest-ease) forwards",
+                ["--dash-to" as string]: `${dashTo}`,
+              } as React.CSSProperties
+            }
+          />
+        )}
       </svg>
       <div
         className="grid place-items-center text-center"
@@ -76,12 +79,16 @@ export function ScoreRing({
           boxShadow: "inset 0 0 38px rgba(255,255,255,.72), 0 18px 46px rgba(150,116,92,.13)",
         }}
       >
-        <div>
-          <div className="text-[40px] font-bold leading-none" style={{ letterSpacing: "-.06em" }}>
-            {score}
+        {empty ? (
+          <div className="font-heading px-4 text-[14px] leading-snug text-[#9A8E86]">{label}</div>
+        ) : (
+          <div>
+            <div className="text-[40px] font-bold leading-none" style={{ letterSpacing: "-.06em" }}>
+              {score}
+            </div>
+            <div className="font-heading mt-1.5 text-[13px] text-[#766D66]">{label}</div>
           </div>
-          <div className="font-heading mt-1.5 text-[13px] text-[#766D66]">{label}</div>
-        </div>
+        )}
       </div>
     </Wrapper>
   );

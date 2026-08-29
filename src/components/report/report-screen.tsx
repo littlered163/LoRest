@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, BedDouble } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { DayReport } from "@/components/report/day-report";
@@ -15,6 +15,8 @@ import {
   parseDateKey,
   reportForDay,
 } from "@/lib/lorest/history";
+import { useAuth } from "@/lib/auth/local-auth";
+import { useDevices } from "@/lib/lorest/use-devices";
 
 type ViewMode = "day" | "week" | "month";
 
@@ -26,6 +28,9 @@ export function ReportScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const zh = (i18n.resolvedLanguage || i18n.language).startsWith("zh");
+  const { user } = useAuth();
+  const { primary } = useDevices();
+  const hasDevice = Boolean(user && primary);
 
   const [view, setView] = useState<ViewMode>("day");
   const [anchor, setAnchor] = useState<Date>(REFERENCE_TODAY);
@@ -135,14 +140,32 @@ export function ReportScreen() {
         </button>
       </div>
 
-      {view === "day" ? (
-        <DayReport report={report} />
+      {hasDevice ? (
+        view === "day" ? (
+          <DayReport report={report} />
+        ) : (
+          <TrendSummary
+            cells={view === "week" ? daysForWeekOf(anchor) : daysForMonthOf(anchor)}
+            selectedDate={keyOf(anchor)}
+            onPickDay={pickDay}
+          />
+        )
       ) : (
-        <TrendSummary
-          cells={view === "week" ? daysForWeekOf(anchor) : daysForMonthOf(anchor)}
-          selectedDate={keyOf(anchor)}
-          onPickDay={pickDay}
-        />
+        <section className="lorest-card mt-6 flex flex-col items-center gap-4 p-10" data-el="report-no-device">
+          <BedDouble className="h-10 w-10 text-[#C4B9B3]" aria-hidden />
+          <p className="text-center text-[14px] leading-[1.65] text-muted-foreground">
+            {!user ? t("today.noDataSignIn") : t("today.noDataDevice")}
+          </p>
+          {!user && (
+            <a
+              href="/login"
+              className="rounded-full px-6 py-2.5 text-[14px] font-semibold text-white"
+              style={{ background: "linear-gradient(90deg,#AEC2CE,#9CB79A)" }}
+            >
+              {t("common.signIn")}
+            </a>
+          )}
+        </section>
       )}
     </ScreenShell>
   );

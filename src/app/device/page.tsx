@@ -25,13 +25,13 @@ import { useDevices, formatLastSync } from "@/lib/lorest/use-devices";
 export default function DevicePage() {
   const { t } = useTranslation();
   const { primary, syncing } = useDevices();
-  const online = primary?.online ?? DEVICE.connected;
+  const online = primary?.online ?? false;
   const deviceName = primary?.name ?? DEVICE.name;
-  const bluetoothName = primary?.bluetoothName ?? DEVICE.bluetoothName;
+  const bluetoothName = primary?.bluetoothName ?? "—";
 
   const statusRows = [
-    { key: "battery", Icon: BatteryMedium, value: `${DEVICE.battery}%` },
-    { key: "firmware", Icon: Cpu, value: DEVICE.firmware },
+    { key: "battery", Icon: BatteryMedium, value: primary ? `${DEVICE.battery}%` : "—" },
+    { key: "firmware", Icon: Cpu, value: primary ? DEVICE.firmware : "—" },
     { key: "bluetooth", Icon: Bluetooth, value: bluetoothName },
     { key: "model", Icon: BedDouble, value: deviceName },
   ] as const;
@@ -87,7 +87,7 @@ export default function DevicePage() {
                 ? t("device.syncing")
                 : primary
                   ? t("device.lastSync", { time: formatLastSync(primary.lastSyncAt, t) })
-                  : t("device.lastSync", { time: DEVICE.lastSyncLabel })}
+                  : t("device.noDeviceSub")}
             </div>
           </div>
         </div>
@@ -112,19 +112,25 @@ export default function DevicePage() {
       {/* Environment */}
       <section className="lorest-card mt-4 p-[18px]" data-el="device-env">
         <h2 className="font-heading text-[17px]">{t("device.envTitle")}</h2>
-        <div className="mt-3 grid grid-cols-2 gap-2.5">
-          <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(228,205,160,.22)" }}>
-            <ThermometerSun className="mx-auto h-5 w-5 text-[#C0972F]" aria-hidden />
-            <div className="mt-1.5 text-[22px] font-bold" style={{ letterSpacing: "-.03em" }}>{SLEEP.roomTemp}℃</div>
-            <div className="text-[12px] text-muted-foreground">{t("device.roomTemp")} · {t("device.tempComfort")}</div>
+        {primary ? (
+          <div className="mt-3 grid grid-cols-2 gap-2.5">
+            <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(228,205,160,.22)" }}>
+              <ThermometerSun className="mx-auto h-5 w-5 text-[#C0972F]" aria-hidden />
+              <div className="mt-1.5 text-[22px] font-bold" style={{ letterSpacing: "-.03em" }}>{SLEEP.roomTemp}℃</div>
+              <div className="text-[12px] text-muted-foreground">{t("device.roomTemp")} · {t("device.tempComfort")}</div>
+            </div>
+            <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(174,194,206,.24)" }}>
+              <Droplets className="mx-auto h-5 w-5 text-[#6E8390]" aria-hidden />
+              <div className="mt-1.5 text-[22px] font-bold" style={{ letterSpacing: "-.03em" }}>{SLEEP.humidity}%</div>
+              <div className="text-[12px] text-muted-foreground">{t("device.humidity")}</div>
+            </div>
           </div>
-          <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(174,194,206,.24)" }}>
-            <Droplets className="mx-auto h-5 w-5 text-[#6E8390]" aria-hidden />
-            <div className="mt-1.5 text-[22px] font-bold" style={{ letterSpacing: "-.03em" }}>{SLEEP.humidity}%</div>
-            <div className="text-[12px] text-muted-foreground">{t("device.humidity")}</div>
-          </div>
-        </div>
-        <p className="mt-3 text-[12px] leading-[1.6] text-muted-foreground">{t("device.envNote")}</p>
+        ) : (
+          <p className="mt-3 text-[13px] text-muted-foreground">{t("device.noEnvData")}</p>
+        )}
+        {primary && (
+          <p className="mt-3 text-[12px] leading-[1.6] text-muted-foreground">{t("device.envNote")}</p>
+        )}
       </section>
 
       {/* Quick links */}
