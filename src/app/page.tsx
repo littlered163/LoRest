@@ -22,7 +22,7 @@ export default function TodayPage() {
   const name = displayName(user);
   const { primary, syncing } = useDevices();
   const online = primary?.online ?? false;
-  const hasData = Boolean(user && primary && online);
+  const hasData = Boolean(user);
 
   const [profile, setProfile] = useState<PregnancyProfileDto | null>(null);
   useEffect(() => {
