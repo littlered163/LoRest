@@ -13,7 +13,7 @@ export function detectSystemLocale(): LocaleCode {
     const locale = normalizeLocale(language);
     if (locale) return locale;
   }
-  return "en-US";
+  return "zh-CN";
 }
 
 export function parseLocalePreference(raw: string | null | undefined): LocalePreference {
