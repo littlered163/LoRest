@@ -2,21 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Leaf, Sparkles } from "lucide-react";
+import { Leaf, Sparkles, ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth, type User } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 
 function makeToken(user: User): string {
-  return Buffer.from(JSON.stringify(user)).toString("base64");
+  return btoa(JSON.stringify(user));
 }
+
+type Mode = "choice" | "signin" | "register";
 
 export default function LoginPage() {
   const { t } = useTranslation();
   const router = useRouter();
   const { user, loading, login } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [mode, setMode] = useState<Mode>("choice");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
 
@@ -24,7 +27,7 @@ export default function LoginPage() {
     if (!loading && user) router.replace("/");
   }, [user, loading, router]);
 
-  const signIn = () => {
+  const submit = () => {
     if (!email.trim()) return;
     setBusy(true);
     const newUser: User = {
@@ -33,16 +36,34 @@ export default function LoginPage() {
       name: name.trim() || null,
       avatarUrl: null,
     };
-    const token = makeToken(newUser);
-    login(newUser, token);
+    login(newUser, makeToken(newUser));
     router.replace("/");
     setBusy(false);
   };
 
+  const PRIMARY_BTN =
+    "flex w-full items-center justify-center rounded-full py-3.5 text-[15px] font-semibold text-white transition-opacity disabled:opacity-60";
+  const PRIMARY_STYLE = {
+    background: "linear-gradient(90deg,#AEC2CE,#9CB79A)",
+    boxShadow: "0 10px 30px rgba(174,194,206,.4)",
+  } as const;
+
   return (
     <ScreenShell withNav={false} label="荷眠登录">
       <div className="flex min-h-[calc(100svh-var(--safe-top)-var(--safe-bottom))] flex-col">
-        <div className="flex justify-end pt-2">
+        <div className="flex items-center justify-between pt-2">
+          {mode !== "choice" ? (
+            <button
+              type="button"
+              onClick={() => setMode("choice")}
+              className="flex items-center gap-1 text-[13px] text-muted-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {t("login.backToChoice")}
+            </button>
+          ) : (
+            <span />
+          )}
           <LorestLangToggle />
         </div>
 
@@ -77,35 +98,55 @@ export default function LoginPage() {
         </div>
 
         <div className="grid gap-3 pb-8">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={t("login.namePlaceholder") || "昵称（可选）"}
-            className="rounded-2xl border border-border bg-white/60 px-4 py-3 text-[15px] outline-none focus:border-[#AEC2CE]"
-          />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("login.emailPlaceholder") || "邮箱"}
-            className="rounded-2xl border border-border bg-white/60 px-4 py-3 text-[15px] outline-none focus:border-[#AEC2CE]"
-          />
-          <button
-            type="button"
-            onClick={signIn}
-            disabled={busy || !email.trim()}
-            className="flex w-full items-center justify-center rounded-full py-3.5 text-[15px] font-semibold text-white transition-opacity disabled:opacity-60"
-            style={{
-              background: "linear-gradient(90deg,#AEC2CE,#9CB79A)",
-              boxShadow: "0 10px 30px rgba(174,194,206,.4)",
-            }}
-          >
-            {busy ? t("login.signingIn") : t("login.signIn")}
-          </button>
-          <p className="mt-1 text-center text-[12px] leading-[1.6] text-muted-foreground">
-            {t("login.hint")}
-          </p>
+          {mode === "choice" && (
+            <>
+              <button type="button" onClick={() => setMode("signin")} className={PRIMARY_BTN} style={PRIMARY_STYLE}>
+                {t("login.signInBtn")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("register")}
+                className="flex w-full items-center justify-center rounded-full border border-[#AEC2CE] py-3.5 text-[15px] font-semibold text-[#5F7C90] transition-opacity"
+                style={{ background: "rgba(174,194,206,.15)" }}
+              >
+                {t("login.registerBtn")}
+              </button>
+            </>
+          )}
+
+          {(mode === "signin" || mode === "register") && (
+            <>
+              {mode === "register" && (
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={t("login.namePlaceholder")}
+                  className="rounded-2xl border border-border bg-white/60 px-4 py-3 text-[15px] outline-none focus:border-[#AEC2CE]"
+                />
+              )}
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={t("login.emailPlaceholder")}
+                className="rounded-2xl border border-border bg-white/60 px-4 py-3 text-[15px] outline-none focus:border-[#AEC2CE]"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={submit}
+                disabled={busy || !email.trim()}
+                className={PRIMARY_BTN}
+                style={PRIMARY_STYLE}
+              >
+                {busy ? t("login.signingIn") : mode === "register" ? t("login.register") : t("login.signIn")}
+              </button>
+              <p className="mt-1 text-center text-[12px] leading-[1.6] text-muted-foreground">
+                {t("login.hint")}
+              </p>
+            </>
+          )}
         </div>
       </div>
     </ScreenShell>
