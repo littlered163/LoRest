@@ -86,7 +86,11 @@ export const MAX_WEEK = 42; // recording continues past due (post-term) until de
 export const DEFAULT_DUE_DATE = "12月17日";
 
 export function startOfDay(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  // Take the calendar date in Asia/Shanghai so week/day counts agree whether
+  // the code runs on a UTC server (EdgeOne) or a UTC+8 host (local dev) —
+  // otherwise "today" can differ by one across timezones.
+  const cal = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" }).format(d); // "2026-08-30"
+  return new Date(`${cal}T00:00:00Z`); // UTC midnight: a pure calendar anchor
 }
 
 /**
