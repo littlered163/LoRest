@@ -30,18 +30,20 @@ export function LorestAura() {
           />
           {/* Radial veins from the center */}
           <g stroke="#5F8A5C" strokeWidth="1.4" opacity="0.5" fill="none">
-            {Array.from({ length: 14 }).map((_, i) => {
-              const a = (i / 14) * Math.PI * 2 - Math.PI / 2;
-              return (
-                <line
-                  key={i}
-                  x1={200}
-                  y1={200}
-                  x2={200 + Math.cos(a) * 150}
-                  y2={200 + Math.sin(a) * 150}
-                />
-              );
-            })}
+            <line x1={200} y1={200} x2={200} y2={50} />
+            <line x1={200} y1={200} x2={306} y2={83} />
+            <line x1={200} y1={200} x2={350} y2={200} />
+            <line x1={200} y1={200} x2={306} y2={317} />
+            <line x1={200} y1={200} x2={200} y2={350} />
+            <line x1={200} y1={200} x2={94} y2={317} />
+            <line x1={200} y1={200} x2={50} y2={200} />
+            <line x1={200} y1={200} x2={94} y2={83} />
+            <line x1={200} y1={200} x2={253} y2={57} />
+            <line x1={200} y1={200} x2={343} y2={147} />
+            <line x1={200} y1={200} x2={343} y2={253} />
+            <line x1={200} y1={200} x2={253} y2={343} />
+            <line x1={200} y1={200} x2={147} y2={343} />
+            <line x1={200} y1={200} x2={57} y2={253} />
           </g>
         </svg>
       </div>
