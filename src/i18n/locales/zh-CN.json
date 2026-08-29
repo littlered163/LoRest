@@ -102,9 +102,15 @@
     "perk1": "查看每晚睡眠报告与趋势",
     "perk2": "记录孕周进度与产检待办",
     "perk3": "多设备同步，换手机也不丢数据",
-    "signIn": "登录 / 注册",
-    "signingIn": "正在打开…",
-    "hint": "支持邮箱、验证码及社交账号登录，首次登录将自动创建账户。"
+    "signInBtn": "登录",
+    "registerBtn": "注册",
+    "signIn": "确认登录",
+    "register": "创建账户",
+    "signingIn": "正在进入…",
+    "namePlaceholder": "昵称（可选）",
+    "emailPlaceholder": "邮箱",
+    "hint": "首次填写邮箱将自动创建账户。",
+    "backToChoice": "返回"
   },
   "onboarding": {
     "step": "第 {{n}} / {{total}} 步",

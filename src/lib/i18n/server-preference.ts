@@ -14,7 +14,7 @@ export async function getServerLocale(): Promise<LocaleCode> {
     raw ? decodeURIComponent(raw) : null,
   );
   if (preference === "system") {
-    return "en-US";
+    return "zh-CN";
   }
   return resolveLocalePreference(preference);
 }

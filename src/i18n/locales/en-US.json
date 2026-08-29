@@ -102,9 +102,15 @@
     "perk1": "See nightly sleep reports and trends",
     "perk2": "Track pregnancy progress and checkups",
     "perk3": "Sync across devices — never lose your data",
-    "signIn": "Sign in / Sign up",
-    "signingIn": "Opening…",
-    "hint": "Email, one-time code, and social login are supported. A new account is created automatically on first sign-in."
+    "signInBtn": "Sign in",
+    "registerBtn": "Sign up",
+    "signIn": "Confirm sign in",
+    "register": "Create account",
+    "signingIn": "Entering…",
+    "namePlaceholder": "Nickname (optional)",
+    "emailPlaceholder": "Email",
+    "hint": "A new account is created automatically on first sign-in.",
+    "backToChoice": "Back"
   },
   "onboarding": {
     "step": "Step {{n}} / {{total}}",
