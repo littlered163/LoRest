@@ -111,6 +111,9 @@
     "emailPlaceholder": "Email",
     "hint": "A new account is created automatically on first sign-in.",
     "backToChoice": "Back",
+    "demoStart": "Start demo",
+    "demoEntering": "Preparing demo...",
+    "demoHint": "Uses a prepared roadshow account with sample pregnancy and sleep data.",
     "demoTitle": "Try a demo account",
     "demoAccount": "Demo {{number}}"
   },

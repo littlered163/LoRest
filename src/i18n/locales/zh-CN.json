@@ -111,6 +111,9 @@
     "emailPlaceholder": "邮箱",
     "hint": "首次填写邮箱将自动创建账户。",
     "backToChoice": "返回",
+    "demoStart": "一键体验",
+    "demoEntering": "正在准备体验...",
+    "demoHint": "已预置路演账号、孕期档案与示例睡眠数据。",
     "demoTitle": "体验账户",
     "demoAccount": "体验 {{number}} 号"
   },
