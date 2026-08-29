@@ -138,6 +138,64 @@ export const WEEK_TIPS: WeekTip[] = [
   },
 ];
 
+// ---- Today page: week-based care advice ----
+interface WeekAdviceEntry {
+  minWeek: number;
+  titleZh: string; titleEn: string;
+  pillZh: string;  pillEn: string;
+  bodyZh: string;  bodyEn: string;
+}
+
+const WEEK_ADVICE_TABLE: WeekAdviceEntry[] = [
+  {
+    minWeek: 4,
+    titleZh: "今日关怀", titleEn: "Today's care",
+    pillZh: "早期舒缓", pillEn: "Early rest",
+    bodyZh: "孕早期适合多卧床休息，避免长时间站立。睡前做简单拉伸，帮助身体放松入睡。",
+    bodyEn: "Early pregnancy calls for more rest. Gentle stretches before bed help your body unwind.",
+  },
+  {
+    minWeek: 13,
+    titleZh: "今日关怀", titleEn: "Today's care",
+    pillZh: "活动适量", pillEn: "Gentle movement",
+    bodyZh: "孕中期可以适当散步，每天 20–30 分钟有助于改善血液循环。侧卧时双腿间夹枕头更舒适。",
+    bodyEn: "A 20–30 min walk helps circulation. A pillow between your knees makes side-sleeping more comfortable.",
+  },
+  {
+    minWeek: 24,
+    titleZh: "今日关怀", titleEn: "Today's care",
+    pillZh: "侧卧更安心", pillEn: "Left-side rest",
+    bodyZh: "推荐左侧卧，有助于减轻子宫对下腔静脉的压迫，改善宝宝供血。白天可以适当午睡 20 分钟。",
+    bodyEn: "Left-side sleeping eases pressure on the vena cava and improves blood flow to baby. A short nap helps too.",
+  },
+  {
+    minWeek: 32,
+    titleZh: "今日关怀", titleEn: "Today's care",
+    pillZh: "关注水肿", pillEn: "Watch swelling",
+    bodyZh: "孕晚期腿部水肿较常见，睡前可将双腿稍稍抬高，减少久坐久站，白天适量补水。",
+    bodyEn: "Leg swelling is common now. Elevate your legs before bed, limit long sitting, and stay hydrated.",
+  },
+  {
+    minWeek: 37,
+    titleZh: "今日关怀", titleEn: "Today's care",
+    pillZh: "临近预产期", pillEn: "Nearly there",
+    bodyZh: "已进入足月期，注意观察胎动变化，有规律宫缩或破水时及时就医。保持作息规律，好好休息。",
+    bodyEn: "You're full term. Track fetal movements and go to hospital for regular contractions or water breaking. Rest well.",
+  },
+];
+
+export function weekAdvice(week: number, zh: boolean): { title: string; pill: string; body: string } {
+  let entry = WEEK_ADVICE_TABLE[0];
+  for (const e of WEEK_ADVICE_TABLE) {
+    if (week >= e.minWeek) entry = e;
+  }
+  return {
+    title: zh ? entry.titleZh : entry.titleEn,
+    pill: zh ? entry.pillZh : entry.pillEn,
+    body: zh ? entry.bodyZh : entry.bodyEn,
+  };
+}
+
 // ---- Companion breathing config ----
 export type SoundKey = "forest" | "rain" | "water" | "night";
 export const SOUNDS: SoundKey[] = ["forest", "rain", "water", "night"];

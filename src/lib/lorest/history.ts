@@ -1,4 +1,4 @@
-// Deterministic simulated sleep history for the LoRest prototype.
+// Deterministic simulated sleep history and weather for the LoRest prototype.
 // The mattress-collected nightly signals are device readings (not user input),
 // so they are derived deterministically per date rather than stored per user.
 
@@ -166,4 +166,33 @@ function buildStages(day: DaySleep, seed: number): StageSegment[] {
 
 function buildCurve(seed: number, avg: number, spread: number): number[] {
   return Array.from({ length: 12 }, (_, i) => avg + Math.round((seededRand(seed + i) - 0.5) * spread * 2));
+}
+
+// ---- Simulated weather (deterministic by date) ----
+export interface WeatherSim {
+  tempC: number;
+  humidity: number;
+  conditionZh: string;
+  conditionEn: string;
+}
+
+const CONDITIONS: Array<{ zh: string; en: string }> = [
+  { zh: "晴", en: "Sunny" },
+  { zh: "多云", en: "Cloudy" },
+  { zh: "阴", en: "Overcast" },
+  { zh: "小雨", en: "Light rain" },
+];
+
+export function weatherForDate(date: Date): WeatherSim {
+  const seed = date.getFullYear() * 500 + (date.getMonth() + 1) * 32 + date.getDate();
+  const r1 = seededRand(seed + 11);
+  const r2 = seededRand(seed + 22);
+  const r3 = seededRand(seed + 33);
+  // Seasonal temp: peak ~32℃ in summer (month 7-8), ~8℃ in winter
+  const month = date.getMonth() + 1;
+  const seasonal = 20 - 12 * Math.cos(((month - 1) / 12) * 2 * Math.PI);
+  const tempC = Math.round(seasonal + (r1 - 0.5) * 6);
+  const humidity = 45 + Math.round(r2 * 40);
+  const condition = CONDITIONS[Math.floor(r3 * CONDITIONS.length)];
+  return { tempC, humidity, conditionZh: condition.zh, conditionEn: condition.en };
 }

@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BedDouble, ChevronRight, Moon, Waves } from "lucide-react";
+import { BedDouble, ChevronRight, Cloud, Moon, Waves } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 import { ScoreRing } from "@/components/lorest/score-ring";
-import { SLEEP, formatHm, displayName, weekInfo } from "@/lib/lorest/sleep";
+import { SLEEP, formatHm, displayName, weekAdvice, weekInfo } from "@/lib/lorest/sleep";
 import { useDevices, formatLastSync } from "@/lib/lorest/use-devices";
+import { weatherForDate, REFERENCE_TODAY } from "@/lib/lorest/history";
 import { fetchProfile, type PregnancyProfileDto } from "@/lib/api";
 
 export default function TodayPage() {
@@ -29,7 +30,9 @@ export default function TodayPage() {
     fetchProfile().then(setProfile).catch(() => undefined);
   }, [user]);
 
+  const weather = weatherForDate(REFERENCE_TODAY);
   const info = profile ? weekInfo(profile.week) : null;
+  const advice = profile ? weekAdvice(profile.week, zh) : null;
 
   return (
     <ScreenShell label="荷眠今日">
@@ -39,6 +42,22 @@ export default function TodayPage() {
         </div>
         <LorestLangToggle />
       </header>
+
+      {/* Weather strip */}
+      <div
+        data-el="today-weather"
+        className="mb-3 flex items-center gap-2 rounded-2xl px-3.5 py-2.5"
+        style={{ background: "rgba(174,194,206,.22)" }}
+      >
+        <Cloud className="h-4 w-4 shrink-0 text-[#6E8BA0]" aria-hidden />
+        <span className="text-[13px] text-[#5F7C90]">
+          {zh ? weather.conditionZh : weather.conditionEn}
+          {" · "}
+          {weather.tempC}℃
+          {" · "}
+          {zh ? `湿度 ${weather.humidity}%` : `${weather.humidity}% humidity`}
+        </span>
+      </div>
 
       <Link
         href="/device"
@@ -120,17 +139,17 @@ export default function TodayPage() {
 
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-heading text-[18px] font-semibold leading-[1.25]">
-                {t("today.adviceTitle")}
+                {advice ? advice.title : t("today.adviceTitle")}
               </h2>
               <span
                 className="whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs text-[#7A6E66]"
                 style={{ background: "rgba(156,183,154,.34)" }}
               >
-                {t("today.advicePill")}
+                {advice ? advice.pill : t("today.advicePill")}
               </span>
             </div>
             <p className="mt-2.5 text-[14px] leading-[1.65] text-[#776C66]">
-              {t("today.adviceBody")}
+              {advice ? advice.body : t("today.adviceBody")}
             </p>
           </Link>
         </>
@@ -153,9 +172,7 @@ export default function TodayPage() {
           <div className="min-w-0 flex-1">
             <div className="text-[12px] text-muted-foreground">{t("today.progressTitle")}</div>
             <div className="font-heading mt-1 text-[22px] font-bold leading-none text-[#5F554F]">
-              {zh
-                ? `孕 ${profile.week} 周`
-                : `Week ${profile.week}`}
+              {zh ? `孕 ${profile.week} 周` : `Week ${profile.week}`}
             </div>
             <div className="mt-1.5 text-[13px] text-[#776C66]">
               {t("today.progressDue", { days: info.daysToDue })}
