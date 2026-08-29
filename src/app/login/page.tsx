@@ -11,7 +11,7 @@ import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 const DEMO_USER: User = {
   id: "roadshow-demo-01",
   email: "demo@lorest.lialab.cn",
-  name: "林安安",
+  name: "小荷",
   avatarUrl: null,
 };
 
