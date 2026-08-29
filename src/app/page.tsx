@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BedDouble, ChevronRight, Moon, Waves } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -8,8 +9,9 @@ import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 import { ScoreRing } from "@/components/lorest/score-ring";
-import { SLEEP, formatHm, displayName } from "@/lib/lorest/sleep";
+import { SLEEP, formatHm, displayName, weekInfo } from "@/lib/lorest/sleep";
 import { useDevices, formatLastSync } from "@/lib/lorest/use-devices";
+import { fetchProfile, type PregnancyProfileDto } from "@/lib/api";
 
 export default function TodayPage() {
   const { t, i18n } = useTranslation();
@@ -20,6 +22,14 @@ export default function TodayPage() {
   const { primary, syncing } = useDevices();
   const online = primary?.online ?? false;
   const hasData = Boolean(user && primary && online);
+
+  const [profile, setProfile] = useState<PregnancyProfileDto | null>(null);
+  useEffect(() => {
+    if (!user) return;
+    fetchProfile().then(setProfile).catch(() => undefined);
+  }, [user]);
+
+  const info = profile ? weekInfo(profile.week) : null;
 
   return (
     <ScreenShell label="荷眠今日">
@@ -134,7 +144,33 @@ export default function TodayPage() {
         </section>
       )}
 
-      <Link href="/companion" className="lorest-card flex items-center justify-between gap-4 mt-4 p-4" data-el="today-companion">
+      {profile && info && (
+        <Link
+          href="/pregnancy"
+          data-el="today-pregnancy"
+          className="lorest-card lorest-card-strong mt-3 flex items-center gap-3 p-[18px]"
+        >
+          <div className="min-w-0 flex-1">
+            <div className="text-[12px] text-muted-foreground">{t("today.progressTitle")}</div>
+            <div className="font-heading mt-1 text-[22px] font-bold leading-none text-[#5F554F]">
+              {zh
+                ? `孕 ${profile.week} 周`
+                : `Week ${profile.week}`}
+            </div>
+            <div className="mt-1.5 text-[13px] text-[#776C66]">
+              {t("today.progressDue", { days: info.daysToDue })}
+              {" · "}
+              {zh ? `像一颗${info.fruitZh}` : `about ${info.fruitEn}`}
+            </div>
+          </div>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            <span className="text-[28px] leading-none" aria-hidden>🌿</span>
+            <ChevronRight className="h-[18px] w-[18px] text-[#B7ADA6]" aria-hidden />
+          </div>
+        </Link>
+      )}
+
+      <Link href="/companion" className="lorest-card flex items-center justify-between gap-4 mt-3 p-4" data-el="today-companion">
         <div>
           <h3 className="font-heading text-[16px]">{t("today.companionTitle")}</h3>
           <div className="mt-1 flex items-center gap-1.5 text-[13px] text-[#6E625C]">

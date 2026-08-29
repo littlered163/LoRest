@@ -12,8 +12,14 @@ export function OnboardingGate() {
   const checkedUserId = useRef<string | null>(null);
 
   useEffect(() => {
-    if (loading || !user) return;
+    if (loading) return;
     if (pathname.startsWith("/onboarding") || pathname.startsWith("/login")) return;
+
+    if (!user) {
+      router.replace("/login");
+      return;
+    }
+
     if (checkedUserId.current === user.id) return;
     checkedUserId.current = user.id;
 
