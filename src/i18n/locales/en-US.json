@@ -110,7 +110,9 @@
     "namePlaceholder": "Nickname (optional)",
     "emailPlaceholder": "Email",
     "hint": "A new account is created automatically on first sign-in.",
-    "backToChoice": "Back"
+    "backToChoice": "Back",
+    "demoTitle": "Try a demo account",
+    "demoAccount": "Demo {{number}}"
   },
   "onboarding": {
     "step": "Step {{n}} / {{total}}",
