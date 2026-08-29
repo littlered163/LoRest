@@ -116,8 +116,8 @@ export function DayReport({ report, profile }: DayReportProps) {
           icon: "baby",
           title: zh ? "关注侧卧舒适度" : "Watch side-sleep comfort",
           body: zh
-            ? `孕${week}周建议使用孕妇枕支撑腰部和腿部，提升侧卧舒适度。`
-            : `At week ${week}, consider using a pregnancy pillow for better side-sleep support.`,
+            ? `孕${week}周可调节床垫的侧卧支撑角度，让腰腿受力更均匀，提升侧卧舒适度。`
+            : `At week ${week}, adjust the mattress side-sleep support angle for more even pressure on your waist and legs.`,
         });
       }
     }
