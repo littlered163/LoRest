@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import {
   BedDouble,
   BatteryMedium,
@@ -21,13 +22,67 @@ import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 import { DEVICE, SLEEP } from "@/lib/lorest/sleep";
 import { useDevices, formatLastSync } from "@/lib/lorest/use-devices";
+import { updateDeviceSettings, type DeviceSettings } from "@/lib/api/devices";
+
+type SupportFeel = "soft" | "standard" | "stable";
+type AssistLevel = "low" | "balanced" | "active";
+type ElevationMode = "back" | "leg" | "both";
+
+const SUPPORT_FEEL_OPTIONS: { value: SupportFeel; labelKey: string }[] = [
+  { value: "soft", labelKey: "device.supportSoft" },
+  { value: "standard", labelKey: "device.supportStandard" },
+  { value: "stable", labelKey: "device.supportStable" },
+];
+
+const ASSIST_LEVEL_OPTIONS: { value: AssistLevel; labelKey: string }[] = [
+  { value: "low", labelKey: "device.assistLow" },
+  { value: "balanced", labelKey: "device.assistBalanced" },
+  { value: "active", labelKey: "device.assistActive" },
+];
+
+const ELEVATION_MODE_OPTIONS: { value: ElevationMode; labelKey: string }[] = [
+  { value: "back", labelKey: "device.elevBack" },
+  { value: "leg", labelKey: "device.elevLeg" },
+  { value: "both", labelKey: "device.elevBoth" },
+];
 
 export default function DevicePage() {
   const { t } = useTranslation();
-  const { primary, syncing } = useDevices();
+  const { primary, syncing, reload } = useDevices();
   const online = primary?.online ?? false;
   const deviceName = primary?.name ?? DEVICE.name;
   const bluetoothName = primary?.bluetoothName ?? "—";
+
+  // Settings state
+  const [settings, setSettings] = useState<DeviceSettings>({
+    supportFeel: "standard",
+    assistLevel: "balanced",
+    elevationMode: "both",
+  });
+  const [saving, setSaving] = useState(false);
+
+  // Parse settings from device if available
+  const deviceSettings = primary?.settings;
+  const hasSettings = deviceSettings && Object.keys(deviceSettings).length > 0;
+  const currentSettings = hasSettings ? deviceSettings : settings;
+
+  async function handleSettingChange<K extends keyof DeviceSettings>(
+    key: K,
+    value: DeviceSettings[K]
+  ) {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+    if (!primary) return;
+    setSaving(true);
+    try {
+      await updateDeviceSettings(primary.id, newSettings);
+      reload();
+    } catch (e) {
+      console.error("failed to save settings", e);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   const statusRows = [
     { key: "battery", Icon: BatteryMedium, value: primary ? `${DEVICE.battery}%` : "—" },
@@ -132,6 +187,83 @@ export default function DevicePage() {
           <p className="mt-3 text-[12px] leading-[1.6] text-muted-foreground">{t("device.envNote")}</p>
         )}
       </section>
+
+      {/* Settings / Adjustment */}
+      {primary && (
+        <section className="lorest-card mt-4 p-[18px]" data-el="device-settings">
+          <h2 className="font-heading text-[17px]">{t("device.adjustTitle")}</h2>
+
+          {/* Support Feel */}
+          <div className="mt-4">
+            <div className="text-[13px] text-[#5F554F]">{t("device.supportFeelTitle")}</div>
+            <div className="mt-2 flex gap-2">
+              {SUPPORT_FEEL_OPTIONS.map(({ value, labelKey }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => handleSettingChange("supportFeel", value)}
+                  className={`flex-1 rounded-full py-2.5 text-[13px] font-medium transition-all ${
+                    currentSettings.supportFeel === value
+                      ? "bg-[#8FB287] text-white"
+                      : "bg-[#F5F2EE] text-[#6E625C]"
+                  }`}
+                >
+                  {t(labelKey)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Assist Level */}
+          <div className="mt-5">
+            <div className="text-[13px] text-[#5F554F]">{t("device.assistLevelTitle")}</div>
+            <div className="mt-2 flex gap-2">
+              {ASSIST_LEVEL_OPTIONS.map(({ value, labelKey }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => handleSettingChange("assistLevel", value)}
+                  className={`flex-1 rounded-full py-2.5 text-[13px] font-medium transition-all ${
+                    currentSettings.assistLevel === value
+                      ? "bg-[#8FB287] text-white"
+                      : "bg-[#F5F2EE] text-[#6E625C]"
+                  }`}
+                >
+                  {t(labelKey)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Elevation Mode */}
+          <div className="mt-5">
+            <div className="text-[13px] text-[#5F554F]">{t("device.elevationTitle")}</div>
+            <div className="mt-2 flex gap-2">
+              {ELEVATION_MODE_OPTIONS.map(({ value, labelKey }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => handleSettingChange("elevationMode", value)}
+                  className={`flex-1 rounded-full py-2.5 text-[13px] font-medium transition-all ${
+                    currentSettings.elevationMode === value
+                      ? "bg-[#8FB287] text-white"
+                      : "bg-[#F5F2EE] text-[#6E625C]"
+                  }`}
+                >
+                  {t(labelKey)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {saving && (
+            <div className="mt-4 flex items-center justify-center gap-2 text-[12px] text-muted-foreground">
+              <RefreshCw className="h-3 w-3 animate-spin" />
+              {t("device.saving")}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Quick links */}
       <section className="mt-4 grid gap-3" data-el="device-quick">

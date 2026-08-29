@@ -41,3 +41,26 @@ export async function syncDevice(userId: string, id: string): Promise<Device | u
 export async function removeDevice(userId: string, id: string): Promise<void> {
   await db.delete(devices).where(and(eq(devices.userId, userId), eq(devices.id, id)));
 }
+
+export async function updateDeviceSettings(
+  userId: string,
+  id: string,
+  settings: { supportFeel?: string; assistLevel?: string; elevationMode?: string }
+): Promise<Device | undefined> {
+  // Merge with existing settings
+  const existing = await db
+    .select({ settings: devices.settings })
+    .from(devices)
+    .where(and(eq(devices.userId, userId), eq(devices.id, id)))
+    .then((rows) => (rows[0]?.settings ? JSON.parse(rows[0].settings) : {}));
+  const merged = { ...existing, ...settings };
+  const rows = await db
+    .update(devices)
+    .set({
+      settings: JSON.stringify(merged),
+      lastSyncAt: new Date(),
+    })
+    .where(and(eq(devices.userId, userId), eq(devices.id, id)))
+    .returning();
+  return rows[0];
+}

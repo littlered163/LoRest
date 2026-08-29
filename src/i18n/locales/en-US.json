@@ -94,7 +94,21 @@
     "calibrate": "Calibrate mattress",
     "unbind": "Unbind device",
     "envNote": "These are overnight environment readings from the mattress, for reference only.",
-    "noEnvData": "Connect your mattress to see room temperature and humidity readings."
+    "noEnvData": "Connect your mattress to see room temperature and humidity readings.",
+    "adjustTitle": "Adjust settings",
+    "supportFeelTitle": "Support feel",
+    "supportSoft": "Soft",
+    "supportStandard": "Standard",
+    "supportStable": "Stable",
+    "assistLevelTitle": "Night assist level",
+    "assistLow": "Low",
+    "assistBalanced": "Balanced",
+    "assistActive": "Active",
+    "elevationTitle": "Elevation mode",
+    "elevBack": "Back relief",
+    "elevLeg": "Leg relief",
+    "elevBoth": "Both",
+    "saving": "Saving…"
   },
   "login": {
     "title": "Welcome back to LoRest",
@@ -220,7 +234,9 @@
     "timesUnit": "{{count}}x",
     "minutesUnit": "{{count}} min",
     "summaryTitle": "A gentle note",
+    "sleepAnalysisTitle": "Sleep analysis report",
     "summaryBody": "Your deep-sleep share was good last night, with a little extra tossing. Try setting your phone down 20 minutes earlier tonight and let your body settle slowly.",
+    "pregnancyTitle": "Pregnancy tips",
     "back": "Back",
     "title2": "Sleep report",
     "viewDay": "Day",
@@ -252,7 +268,11 @@
     "recordTitle": "Quick log",
     "recordWeight": "Weight",
     "recordMood": "Mood",
-    "checkupEmpty": "No check-up records yet"
+    "checkupEmpty": "No check-up records yet",
+    "addCheckup": "Add check-up",
+    "addTodo": "Add to-do",
+    "addWeight": "Log weight",
+    "addMood": "Log mood"
   },
   "companion": {
     "title": "Bedtime rest",

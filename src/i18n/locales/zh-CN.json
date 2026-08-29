@@ -94,7 +94,21 @@
     "calibrate": "校准床垫",
     "unbind": "解绑设备",
     "envNote": "以上为床垫整夜采集的环境读数，仅供参考。",
-    "noEnvData": "连接床垫后，这里将显示室温与湿度读数。"
+    "noEnvData": "连接床垫后，这里将显示室温与湿度读数。",
+    "adjustTitle": "调节设置",
+    "supportFeelTitle": "支撑感受",
+    "supportSoft": "柔和",
+    "supportStandard": "标准",
+    "supportStable": "稳定",
+    "assistLevelTitle": "夜间辅助强度",
+    "assistLow": "低干预",
+    "assistBalanced": "平衡",
+    "assistActive": "积极辅助",
+    "elevationTitle": "抬高偏好",
+    "elevBack": "背部舒缓",
+    "elevLeg": "腿部舒缓",
+    "elevBoth": "背腿联动",
+    "saving": "保存中…"
   },
   "login": {
     "title": "欢迎回到荷眠",
@@ -220,7 +234,9 @@
     "timesUnit": "{{count}} 次",
     "minutesUnit": "{{count}} 分钟",
     "summaryTitle": "给你的话",
+    "sleepAnalysisTitle": "睡眠分析报告",
     "summaryBody": "昨夜深睡比例不错，翻身略多。今晚试着提前 20 分钟放下手机，让身体慢慢沉下来。",
+    "pregnancyTitle": "孕期专属建议",
     "back": "返回",
     "title2": "睡眠报告",
     "viewDay": "日",
@@ -252,7 +268,11 @@
     "recordTitle": "轻记录",
     "recordWeight": "体重",
     "recordMood": "心情",
-    "checkupEmpty": "暂无产检记录"
+    "checkupEmpty": "暂无产检记录",
+    "addCheckup": "添加产检",
+    "addTodo": "添加待办",
+    "addWeight": "记录体重",
+    "addMood": "记录心情"
   },
   "companion": {
     "title": "睡前陪伴",

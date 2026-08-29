@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
-import { addDevice, getDevices, removeDevice, syncDevice } from "@/lib/db/queries";
+import { addDevice, getDevices, removeDevice, syncDevice, updateDeviceSettings } from "@/lib/db/queries";
 
 export async function GET(request: NextRequest) {
   const auth = requireAuth(request);
@@ -30,8 +30,16 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   const auth = requireAuth(request);
   if (!auth.ok) return auth.response;
-  const body = (await request.json().catch(() => ({}))) as { id?: string };
+  const body = (await request.json().catch(() => ({}))) as { id?: string; settings?: object };
   if (!body.id) return NextResponse.json({ ok: false, error: "missing id" }, { status: 400 });
+
+  // If settings provided, update them; otherwise just sync
+  if (body.settings) {
+    const device = await updateDeviceSettings(auth.user.id, body.id, body.settings as Record<string, string>);
+    if (!device) return NextResponse.json({ ok: false, error: "not found" }, { status: 404 });
+    return NextResponse.json({ ok: true, device });
+  }
+
   const device = await syncDevice(auth.user.id, body.id);
   if (!device) return NextResponse.json({ ok: false, error: "not found" }, { status: 404 });
   return NextResponse.json({ ok: true, device });

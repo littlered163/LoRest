@@ -7,6 +7,13 @@ export interface DeviceDto {
   bluetoothName: string | null;
   online: boolean;
   lastSyncAt: string;
+  settings?: DeviceSettings;
+}
+
+export interface DeviceSettings {
+  supportFeel: "soft" | "standard" | "stable";
+  assistLevel: "low" | "balanced" | "active";
+  elevationMode: "back" | "leg" | "both";
 }
 
 export async function fetchDevices(): Promise<DeviceDto[]> {
@@ -50,4 +57,18 @@ export async function removeDeviceApi(id: string): Promise<void> {
     body: JSON.stringify({ id }),
   });
   if (!res.ok) throw new Error("failed to remove device");
+}
+
+export async function updateDeviceSettings(
+  id: string,
+  settings: DeviceSettings
+): Promise<DeviceDto> {
+  const res = await request("/api/devices", {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ id, settings }),
+  });
+  if (!res.ok) throw new Error("failed to update device settings");
+  const data = (await res.json()) as { device: DeviceDto };
+  return data.device;
 }

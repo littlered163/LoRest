@@ -71,3 +71,39 @@ export const checkups = pgTable(
 );
 
 export type Checkup = InferSelectModel<typeof checkups>;
+
+/** Weight log entries, per user. */
+export const weightLogs = pgTable(
+  "weight_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("user_id", { length: 128 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    weightKg: numeric("weight_kg", { precision: 5, scale: 1 }).notNull(),
+    recordedAt: timestamp("recorded_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    userIdx: index("weight_logs_user_idx").on(table.userId),
+  }),
+);
+
+export type WeightLog = InferSelectModel<typeof weightLogs>;
+
+/** Mood log entries, per user. */
+export const moodLogs = pgTable(
+  "mood_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("user_id", { length: 128 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    mood: varchar("mood", { length: 32 }).notNull(),
+    recordedAt: timestamp("recorded_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    userIdx: index("mood_logs_user_idx").on(table.userId),
+  }),
+);
+
+export type MoodLog = InferSelectModel<typeof moodLogs>;

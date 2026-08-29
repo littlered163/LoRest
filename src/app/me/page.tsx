@@ -116,9 +116,6 @@ export default function MePage() {
         </button>
       )}
 
-      <p className="mt-4 px-1 text-center text-[12px] leading-[1.6] text-muted-foreground" data-el="me-privacy-note">
-        {t("me.privacyNote")}
-      </p>
     </ScreenShell>
   );
 }

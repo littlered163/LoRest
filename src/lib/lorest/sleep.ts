@@ -24,6 +24,9 @@ export interface SleepSummary {
   humidity: number;
   quality: string;
   dateLabel: string;
+  // Extended pregnancy metrics
+  sideLieMinutes?: number;
+  wakeAfterSleepMinutes?: number;
 }
 
 export const SLEEP: SleepSummary = {
@@ -119,8 +122,8 @@ export const WEEK_TIPS: WeekTip[] = [
     id: "sleep-side",
     titleZh: "试试左侧卧",
     titleEn: "Try left-side sleeping",
-    bodyZh: "左侧卧有助于改善血液循环，可在双腿间夹一个孕妇枕更舒适。",
-    bodyEn: "Left-side sleeping improves circulation; a pillow between your knees helps.",
+    bodyZh: "左侧卧有助于改善血液循环，可调节床垫的侧卧支撑获得更舒适的体验。",
+    bodyEn: "Left-side sleeping improves circulation; adjust your mattress for better side-sleep support.",
   },
   {
     id: "hydrate",
@@ -170,8 +173,8 @@ export function weekTips(week: number): WeekTip[] {
         id: "side-sleep",
         titleZh: "练习侧卧睡姿",
         titleEn: "Practice side-sleeping",
-        bodyZh: "可以在双腿间垫孕妇枕，减轻腰背牵拉感。",
-        bodyEn: "A pillow between your knees can ease back and hip tension.",
+        bodyZh: "可以调节床垫的侧卧支撑角度，减轻腰背牵拉感。",
+        bodyEn: "Adjust your mattress side-sleep support angle to ease back and hip tension.",
       },
     ];
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useAuth } from "@/lib/auth/local-auth";
 import { fetchDevices, syncDeviceApi, type DeviceDto } from "@/lib/api";
 
@@ -26,17 +26,13 @@ export function useDevices() {
   const [syncing, setSyncing] = useState(false);
   const syncedFor = useRef<string | null>(null);
 
-  useEffect(() => {
-    let active = true;
+  const load = useCallback(() => {
     if (!user) {
-      Promise.resolve().then(() => active && setDevices(null));
-      return () => {
-        active = false;
-      };
+      setDevices(null);
+      return;
     }
     fetchDevices()
       .then(async (list) => {
-        if (!active) return;
         if (user.id.startsWith("roadshow-demo-") && list.length === 0) {
           list = [demoDevice()];
         }
@@ -47,22 +43,23 @@ export function useDevices() {
           setSyncing(true);
           try {
             const updated = await syncDeviceApi(primary.id);
-            if (active) setDevices((prev) => (prev ? prev.map((d) => (d.id === updated.id ? updated : d)) : prev));
+            setDevices((prev) => (prev ? prev.map((d) => (d.id === updated.id ? updated : d)) : prev));
           } catch {
             /* ignore */
           } finally {
-            // brief visible "syncing" moment
-            setTimeout(() => active && setSyncing(false), 900);
+            setTimeout(() => setSyncing(false), 900);
           }
         }
       })
-      .catch(() => active && setDevices(user.id.startsWith("roadshow-demo-") ? [demoDevice()] : []));
-    return () => {
-      active = false;
-    };
+      .catch(() => setDevices(user.id.startsWith("roadshow-demo-") ? [demoDevice()] : []));
   }, [user]);
 
-  return { devices, primary: devices?.[0] ?? null, syncing, loaded: devices !== null };
+  useEffect(() => {
+    const timer = window.setTimeout(load, 0);
+    return () => window.clearTimeout(timer);
+  }, [load]);
+
+  return { devices, primary: devices?.[0] ?? null, syncing, loaded: devices !== null, reload: load };
 }
 
 /** Localized relative time for a device's last sync. `t` from useTranslation. */

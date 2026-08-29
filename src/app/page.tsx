@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BedDouble, ChevronRight, Cloud, Moon } from "lucide-react";
+import { BedDouble, ChevronRight, Moon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
@@ -11,7 +11,6 @@ import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 import { ScoreRing } from "@/components/lorest/score-ring";
 import { SLEEP, formatHm, displayName, weekAdvice, weekInfo } from "@/lib/lorest/sleep";
 import { useDevices, formatLastSync } from "@/lib/lorest/use-devices";
-import { weatherForDate, REFERENCE_TODAY } from "@/lib/lorest/history";
 import { fetchProfile, type PregnancyProfileDto } from "@/lib/api";
 
 export default function TodayPage() {
@@ -30,7 +29,6 @@ export default function TodayPage() {
     fetchProfile().then(setProfile).catch(() => undefined);
   }, [user]);
 
-  const weather = weatherForDate(REFERENCE_TODAY);
   const info = profile ? weekInfo(profile.week) : null;
   const advice = profile ? weekAdvice(profile.week, zh) : null;
 
@@ -42,22 +40,6 @@ export default function TodayPage() {
         </div>
         <LorestLangToggle />
       </header>
-
-      {/* Weather strip */}
-      <div
-        data-el="today-weather"
-        className="mb-3 flex items-center gap-2 rounded-2xl px-3.5 py-2.5"
-        style={{ background: "rgba(174,194,206,.22)" }}
-      >
-        <Cloud className="h-4 w-4 shrink-0 text-[#6E8BA0]" aria-hidden />
-        <span className="text-[13px] text-[#5F7C90]">
-          {zh ? weather.conditionZh : weather.conditionEn}
-          {" · "}
-          {weather.tempC}℃
-          {" · "}
-          {zh ? `湿度 ${weather.humidity}%` : `${weather.humidity}% humidity`}
-        </span>
-      </div>
 
       <Link
         href="/device"

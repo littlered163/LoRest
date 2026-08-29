@@ -15,6 +15,7 @@ export const devices = pgTable(
     bluetoothName: varchar("bluetooth_name", { length: 120 }),
     online: boolean("online").notNull().default(true),
     lastSyncAt: timestamp("last_sync_at").notNull().defaultNow(),
+    settings: varchar("settings", { length: 500 }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => ({

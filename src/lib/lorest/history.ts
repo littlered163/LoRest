@@ -150,7 +150,85 @@ export function reportForDay(day: DaySleep): SleepSummary & { stages: StageSegme
     stages,
     heart: buildCurve(seed, avgHeartRate, 8),
     breath: buildCurve(seed + 50, avgBreathRate, 2),
+    // Extended metrics for pregnancy
+    sideLieMinutes: 280 + Math.round(seededRand(seed + 10) * 60),
+    wakeAfterSleepMinutes: 5 + Math.round(seededRand(seed + 11) * 20),
   };
+}
+
+// Extended day report with pregnancy-specific metrics
+export interface DayReportExt extends ReturnType<typeof reportForDay> {
+  sideLieMinutes: number;
+  wakeAfterSleepMinutes: number;
+}
+
+// Week summary
+export interface WeekSummary {
+  avgScore: number;
+  avgSleepMinutes: number;
+  avgDeepMinutes: number;
+  avgSideLieMinutes: number;
+  avgTurns: number;
+  trend: "up" | "down" | "stable";
+  totalNights: number;
+}
+
+export function weekSummary(cells: DayCell[]): WeekSummary {
+  const validDays = cells.filter((c): c is DayCell & { day: DaySleep } => c.day !== null);
+  if (validDays.length === 0) {
+    return { avgScore: 0, avgSleepMinutes: 0, avgDeepMinutes: 0, avgSideLieMinutes: 0, avgTurns: 0, trend: "stable", totalNights: 0 };
+  }
+  const reports = validDays.map(c => reportForDay(c.day));
+  const avgScore = Math.round(reports.reduce((a, r) => a + r.score, 0) / reports.length);
+  const avgSleepMinutes = Math.round(reports.reduce((a, r) => a + r.totalSleepMinutes, 0) / reports.length);
+  const avgDeepMinutes = Math.round(reports.reduce((a, r) => a + r.deepMinutes, 0) / reports.length);
+  const avgSideLieMinutes = Math.round(reports.reduce((a, r) => a + (r.sideLieMinutes ?? 0), 0) / reports.length);
+  const avgTurns = Math.round(reports.reduce((a, r) => a + r.turns, 0) / reports.length);
+
+  // Calculate trend (compare first half vs second half)
+  const mid = Math.floor(reports.length / 2);
+  const firstHalf = reports.slice(0, mid).reduce((a, r) => a + r.score, 0) / mid;
+  const secondHalf = reports.slice(mid).reduce((a, r) => a + r.score, 0) / (reports.length - mid);
+  const trendDiff = secondHalf - firstHalf;
+  const trend = trendDiff > 3 ? "up" : trendDiff < -3 ? "down" : "stable";
+
+  return { avgScore, avgSleepMinutes, avgDeepMinutes, avgSideLieMinutes, avgTurns, trend, totalNights: validDays.length };
+}
+
+// Month summary
+export interface MonthSummary {
+  avgScore: number;
+  avgSleepMinutes: number;
+  bestDay: { date: string; score: number };
+  worstDay: { date: string; score: number };
+  totalNights: number;
+  sleepTrend: number[];
+}
+
+export function monthSummary(cells: DayCell[]): MonthSummary {
+  const validDays = cells.filter((c): c is DayCell & { day: DaySleep } => c.day !== null);
+  if (validDays.length === 0) {
+    return { avgScore: 0, avgSleepMinutes: 0, bestDay: { date: "", score: 0 }, worstDay: { date: "", score: 0 }, totalNights: 0, sleepTrend: [] };
+  }
+  const reports = validDays.map(c => ({ date: c.date, ...reportForDay(c.day) }));
+  const avgScore = Math.round(reports.reduce((a, r) => a + r.score, 0) / reports.length);
+  const avgSleepMinutes = Math.round(reports.reduce((a, r) => a + r.totalSleepMinutes, 0) / reports.length);
+
+  const sorted = [...reports].sort((a, b) => b.score - a.score);
+  const bestDay = { date: sorted[0]?.date || "", score: sorted[0]?.score || 0 };
+  const worstDay = { date: sorted[sorted.length - 1]?.date || "", score: sorted[sorted.length - 1]?.score || 0 };
+
+  // Weekly trend (4 data points for month)
+  const sleepTrend: number[] = [];
+  const weekSize = Math.ceil(reports.length / 4);
+  for (let i = 0; i < 4; i++) {
+    const week = reports.slice(i * weekSize, (i + 1) * weekSize);
+    if (week.length > 0) {
+      sleepTrend.push(Math.round(week.reduce((a, r) => a + r.score, 0) / week.length));
+    }
+  }
+
+  return { avgScore, avgSleepMinutes, bestDay, worstDay, totalNights: validDays.length, sleepTrend };
 }
 
 function buildStages(day: DaySleep, seed: number): StageSegment[] {

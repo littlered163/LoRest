@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ChevronLeft, ChevronRight, BedDouble } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -17,6 +17,7 @@ import {
 } from "@/lib/lorest/history";
 import { useAuth } from "@/lib/auth/local-auth";
 import { useDevices } from "@/lib/lorest/use-devices";
+import { fetchProfile, type PregnancyProfileDto } from "@/lib/api";
 
 type ViewMode = "day" | "week" | "month";
 
@@ -34,8 +35,17 @@ export function ReportScreen() {
 
   const [view, setView] = useState<ViewMode>("day");
   const [anchor, setAnchor] = useState<Date>(REFERENCE_TODAY);
+  const [profile, setProfile] = useState<PregnancyProfileDto | null>(null);
 
   const isToday = keyOf(anchor) === keyOf(REFERENCE_TODAY);
+
+  // Fetch pregnancy profile
+  useEffect(() => {
+    if (!user) return;
+    fetchProfile()
+      .then(setProfile)
+      .catch(() => setProfile(null));
+  }, [user]);
 
   // Can we page forward? Not beyond the period containing REFERENCE_TODAY.
   function shift(dir: 1 | -1) {
@@ -142,12 +152,13 @@ export function ReportScreen() {
 
       {hasDevice ? (
         view === "day" ? (
-          <DayReport report={report} />
+          <DayReport report={report} profile={profile} />
         ) : (
           <TrendSummary
             cells={view === "week" ? daysForWeekOf(anchor) : daysForMonthOf(anchor)}
             selectedDate={keyOf(anchor)}
             onPickDay={pickDay}
+            isMonth={view === "month"}
           />
         )
       ) : (

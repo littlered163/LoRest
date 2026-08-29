@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { CalendarCheck, Check, Circle, Plus, Trash2 } from "lucide-react";
 import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { MeSubHeader } from "@/components/lorest/me-sub-header";
 import { TOTAL_WEEKS, DEFAULT_DUE_DATE } from "@/lib/lorest/sleep";
-import { fetchProfile, saveProfile } from "@/lib/api";
+import { fetchProfile, saveProfile, fetchCheckups, addCheckupApi, deleteCheckupApi } from "@/lib/api";
+import type { CheckupDto } from "@/lib/api";
 
 const MOODS = ["😊", "😌", "🥱", "😣", "🤗"];
 
@@ -20,17 +22,21 @@ export default function PregnancySettingsPage() {
   const [weightKg, setWeightKg] = useState("");
   const [mood, setMood] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [checkups, setCheckups] = useState<CheckupDto[]>([]);
+  const [newCheckup, setNewCheckup] = useState("");
+  const [newCheckupDate, setNewCheckupDate] = useState("");
 
   useEffect(() => {
     if (!user) return;
     let active = true;
-    fetchProfile()
-      .then((p) => {
+    Promise.all([fetchProfile(), fetchCheckups()])
+      .then(([p, ck]) => {
         if (!active) return;
         setWeek(p.week);
         setDueDate(p.dueDate);
         setWeightKg(p.weightKg ?? "");
         setMood(p.mood);
+        setCheckups(ck);
       })
       .catch(() => undefined);
     return () => {
@@ -56,6 +62,29 @@ export default function PregnancySettingsPage() {
       toast.error(t("common.saveFailed"));
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function onAddCheckup() {
+    if (!newCheckup.trim() || !user) return;
+    try {
+      const checkup = await addCheckupApi(newCheckup.trim(), newCheckupDate.trim());
+      setCheckups((prev) => [...prev, checkup]);
+      setNewCheckup("");
+      setNewCheckupDate("");
+      toast.success(t("common.saved"));
+    } catch {
+      toast.error(t("common.saveFailed"));
+    }
+  }
+
+  async function onDeleteCheckup(id: string) {
+    if (!user) return;
+    try {
+      await deleteCheckupApi(id);
+      setCheckups((prev) => prev.filter((c) => c.id !== id));
+    } catch {
+      toast.error(t("common.saveFailed"));
     }
   }
 
@@ -128,6 +157,56 @@ export default function PregnancySettingsPage() {
               </button>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 产检管理 */}
+      <section className="lorest-card lorest-card-strong grid gap-3 p-[18px]" data-el="me-checkups-form">
+        <div className="flex items-center gap-2">
+          <CalendarCheck className="h-4 w-4 text-[#6E8390]" />
+          <span className="font-heading text-[15px]">产检记录</span>
+        </div>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={newCheckup}
+            onChange={(e) => setNewCheckup(e.target.value)}
+            placeholder="添加产检项目"
+            className="flex-1 rounded-xl border border-border bg-white/60 px-3 py-2 text-[14px]"
+          />
+          <input
+            type="text"
+            value={newCheckupDate}
+            onChange={(e) => setNewCheckupDate(e.target.value)}
+            placeholder="日期"
+            className="w-20 rounded-xl border border-border bg-white/60 px-2 py-2 text-[14px]"
+          />
+          <button
+            type="button"
+            onClick={() => void onAddCheckup()}
+            disabled={!newCheckup.trim()}
+            className="shrink-0 rounded-xl bg-[#8FB287] px-3 py-2 text-[14px] font-semibold text-white disabled:opacity-50"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="grid gap-2">
+          {checkups.map((c) => (
+            <div key={c.id} className="flex items-center justify-between rounded-xl bg-[#F5F2EE] px-3 py-2">
+              <div className="flex items-center gap-2">
+                <span className="grid h-6 w-6 place-items-center rounded-full" style={{ background: c.done ? "rgba(127,154,166,.22)" : "rgba(156,183,154,.34)" }}>
+                  {c.done ? <Check className="h-3.5 w-3.5 text-[#6E8390]" /> : <Circle className="h-3 w-3 text-[#B89A90]" />}
+                </span>
+                <span className="text-[14px]">{c.label}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[12px] text-muted-foreground">{c.dateLabel}</span>
+                <button type="button" onClick={() => void onDeleteCheckup(c.id)} className="text-[#E0917F] hover:opacity-70">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
