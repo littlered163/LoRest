@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
   icons: {
-    icon: "https://eazo.ai/favicon.ico",
+    icon: "/favicon.svg",
   },
   openGraph: {
     type: "website",
