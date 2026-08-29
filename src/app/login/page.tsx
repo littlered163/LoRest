@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Leaf, Sparkles, ArrowLeft } from "lucide-react";
+import { Sparkles, ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth, type User } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
@@ -77,7 +78,14 @@ export default function LoginPage() {
             }}
             aria-hidden
           >
-            <Leaf className="h-8 w-8 text-white/90" />
+            <Image
+              src="/favicon.svg"
+              alt=""
+              width={64}
+              height={64}
+              className="h-16 w-16"
+              priority
+            />
           </span>
 
           <h1 className="font-heading mt-7 text-[28px] font-semibold leading-[1.2] text-[#5F554F]">
