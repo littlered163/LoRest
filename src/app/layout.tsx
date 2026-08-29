@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Inter, Noto_Serif_SC } from "next/font/google";
 import { AuthProvider } from "@/lib/auth/local-auth";
 import { cn } from "@/utils/utils";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,13 +8,6 @@ import { I18nProvider } from "@/components/i18n/i18n-provider";
 import { LocaleSyncEffect } from "@/components/i18n/locale-sync-effect";
 import { PreviewInspector } from "@/components/eazo/preview-inspector";
 import { getServerLocale } from "@/lib/i18n/server-preference";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const notoSerifSC = Noto_Serif_SC({
-  weight: ["500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-heading",
-});
 
 const SITE_URL = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -78,8 +70,6 @@ export default async function RootLayout({
       className={cn(
         "h-full antialiased",
         "font-sans",
-        inter.variable,
-        notoSerifSC.variable,
       )}
     >
       <body

@@ -55,12 +55,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({ user: null, loading: true, authenticated: false });
 
   useEffect(() => {
-    const session = readSession();
-    if (session) {
-      setState({ user: session.user, loading: false, authenticated: true });
-    } else {
-      setState({ user: null, loading: false, authenticated: false });
-    }
+    queueMicrotask(() => {
+      const session = readSession();
+      if (session) {
+        setState({ user: session.user, loading: false, authenticated: true });
+      } else {
+        setState({ user: null, loading: false, authenticated: false });
+      }
+    });
   }, []);
 
   function login(user: User, token: string) {
