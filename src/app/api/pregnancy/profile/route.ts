@@ -14,18 +14,20 @@ export async function PATCH(request: NextRequest) {
   if (!auth.ok) return auth.response;
 
   const body = (await request.json().catch(() => ({}))) as {
-    week?: number;
-    dueDate?: string;
+    pregnancyStartDate?: string;
+    initialWeightKg?: number | string;
+    heightCm?: number | string;
     weightKg?: number | string;
-    mood?: string;
     onboarded?: boolean;
   };
 
   const data: Record<string, unknown> = {};
-  if (typeof body.week === "number" && body.week >= 4 && body.week <= 42) data.week = body.week;
-  if (typeof body.dueDate === "string" && body.dueDate.length <= 32) data.dueDate = body.dueDate;
+  if (typeof body.pregnancyStartDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.pregnancyStartDate)) {
+    data.pregnancyStartDate = body.pregnancyStartDate;
+  }
+  if (body.initialWeightKg !== undefined) data.initialWeightKg = String(body.initialWeightKg);
+  if (body.heightCm !== undefined) data.heightCm = String(body.heightCm);
   if (body.weightKg !== undefined) data.weightKg = String(body.weightKg);
-  if (typeof body.mood === "string" && body.mood.length <= 32) data.mood = body.mood;
   if (typeof body.onboarded === "boolean") data.onboarded = body.onboarded;
 
   const profile = await updateProfile(auth.user.id, data);

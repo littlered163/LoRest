@@ -12,9 +12,15 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const auth = requireAuth(request);
   if (!auth.ok) return auth.response;
-  const body = (await request.json().catch(() => ({}))) as { weightKg?: string };
+  const body = (await request.json().catch(() => ({}))) as { weightKg?: string; recordedAt?: string };
   if (!body.weightKg)
     return NextResponse.json({ ok: false, error: "invalid weight" }, { status: 400 });
-  const log = await addWeightLog(auth.user.id, body.weightKg);
+  let recordedAt: Date | undefined;
+  if (body.recordedAt) {
+    recordedAt = new Date(body.recordedAt);
+    if (Number.isNaN(recordedAt.getTime()))
+      return NextResponse.json({ ok: false, error: "invalid date" }, { status: 400 });
+  }
+  const log = await addWeightLog(auth.user.id, body.weightKg, recordedAt);
   return NextResponse.json({ ok: true, log });
 }

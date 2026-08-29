@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>荷眠 LoRest Logo Preview</title>
+    <style>
+      :root {
+        color: #5f554f;
+        background: #eef1e9;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+      }
+      main {
+        width: min(920px, calc(100vw - 40px));
+      }
+      .panel {
+        border: 1px solid rgba(95, 85, 79, 0.12);
+        background: rgba(252, 253, 248, 0.72);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 22px 54px rgba(124, 94, 77, 0.12);
+      }
+      .row {
+        display: grid;
+        gap: 28px;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+      .mark {
+        width: 128px;
+      }
+      p {
+        margin: 20px 0 0;
+        color: #776c66;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="panel">
+        <div class="row">
+          <img src="./lorest-logo.svg" alt="荷眠 LoRest logo" />
+          <img class="mark" src="./lorest-logo-mark.svg" alt="荷眠 LoRest icon" />
+        </div>
+        <p>导出文件：public/brand/lorest-logo.svg 和 public/brand/lorest-logo-mark.svg</p>
+      </section>
+    </main>
+  </body>
+</html>

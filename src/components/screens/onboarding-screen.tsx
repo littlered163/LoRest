@@ -8,10 +8,9 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
-import { TOTAL_WEEKS, DEFAULT_DUE_DATE } from "@/lib/lorest/sleep";
+import { weekFromLMP, dueDateFromLMP } from "@/lib/lorest/sleep";
 import { saveProfile, addDeviceApi } from "@/lib/api";
 
-const MOODS = ["😊", "😌", "🥱", "😣", "🤗"];
 const TOTAL_STEPS = 2;
 
 const PRIMARY_BTN =
@@ -29,13 +28,16 @@ export function OnboardingScreen() {
   const [step, setStep] = useState(1);
   const [busy, setBusy] = useState(false);
 
-  const [week, setWeek] = useState(24);
-  const [dueDate, setDueDate] = useState(DEFAULT_DUE_DATE);
-  const [weightKg, setWeightKg] = useState("");
-  const [mood, setMood] = useState<string | null>(null);
+  const [pregnancyStartDate, setPregnancyStartDate] = useState("");
+  const [initialWeightKg, setInitialWeightKg] = useState("");
+  const [heightCm, setHeightCm] = useState("");
 
   const [scanning, setScanning] = useState(false);
   const [connectedName, setConnectedName] = useState<string | null>(null);
+
+  const lmpValid = /^\d{4}-\d{2}-\d{2}$/.test(pregnancyStartDate);
+  const derivedWeek = lmpValid ? weekFromLMP(pregnancyStartDate) : null;
+  const derivedDue = lmpValid ? dueDateFromLMP(pregnancyStartDate) : null;
 
   useEffect(() => {
     if (!loading && !user) router.replace("/login");
@@ -44,12 +46,11 @@ export function OnboardingScreen() {
   async function saveStep1() {
     setBusy(true);
     try {
-      await saveProfile({
-        week,
-        dueDate,
-        weightKg: weightKg === "" ? undefined : weightKg,
-        mood: mood ?? undefined,
-      });
+      const patch: Record<string, string> = {};
+      if (pregnancyStartDate.trim()) patch.pregnancyStartDate = pregnancyStartDate.trim();
+      if (initialWeightKg.trim()) patch.initialWeightKg = initialWeightKg.trim();
+      if (heightCm.trim()) patch.heightCm = heightCm.trim();
+      await saveProfile(patch);
       setStep(2);
     } catch {
       toast.error(t("common.saveFailed"));
@@ -123,64 +124,57 @@ export function OnboardingScreen() {
           {step === 1 ? (
             <section className="lorest-card lorest-card-strong grid gap-5 p-[18px]">
               <label className="grid gap-2">
-                <span className="text-[13px] text-[#6E625C]">{t("meSettings.dueDate")}</span>
+                <span className="text-[13px] text-[#6E625C]">{t("meSettings.pregnancyStartDate")}</span>
                 <input
-                  type="text"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  placeholder="12月17日"
+                  type="date"
+                  value={pregnancyStartDate}
+                  onChange={(e) => setPregnancyStartDate(e.target.value)}
                   className="rounded-2xl border border-border bg-white/60 px-4 py-3 text-[15px] outline-none focus:border-[#AEC2CE]"
                 />
               </label>
-              <div className="grid gap-2">
-                <div className="flex items-center justify-between">
+
+              <div className="grid gap-2 rounded-2xl p-4" style={{ background: "rgba(255,252,247,.6)" }}>
+                <div className="flex items-center justify-between text-[14px]">
                   <span className="text-[13px] text-[#6E625C]">{t("meSettings.week")}</span>
-                  <span className="font-heading text-[16px] text-[#8E6A5E]">{t("meSettings.weekValue", { week })}</span>
+                  <span className="font-heading text-[16px] text-[#8E6A5E]">
+                    {derivedWeek !== null ? t("meSettings.weekValue", { week: derivedWeek }) : "—"}
+                  </span>
                 </div>
-                <input
-                  type="range"
-                  min={4}
-                  max={TOTAL_WEEKS}
-                  value={week}
-                  onChange={(e) => setWeek(Number(e.target.value))}
-                  className="w-full accent-[#AEC2CE]"
-                />
+                <div className="flex items-center justify-between text-[14px]">
+                  <span className="text-[13px] text-[#6E625C]">{t("meSettings.dueDate")}</span>
+                  <span className="font-heading text-[16px] text-[#8E6A5E]">{derivedDue ?? "—"}</span>
+                </div>
               </div>
+
               <label className="grid gap-2">
-                <span className="text-[13px] text-[#6E625C]">{t("meSettings.weight")}</span>
+                <span className="text-[13px] text-[#6E625C]">{t("meSettings.initialWeight")}</span>
                 <div className="flex items-center gap-2 rounded-2xl border border-border bg-white/60 px-4 py-3">
                   <input
                     type="number"
                     inputMode="decimal"
-                    value={weightKg}
-                    onChange={(e) => setWeightKg(e.target.value)}
+                    value={initialWeightKg}
+                    onChange={(e) => setInitialWeightKg(e.target.value)}
                     placeholder="—"
                     className="w-full bg-transparent text-[15px] outline-none"
                   />
                   <span className="text-[13px] text-muted-foreground">kg</span>
                 </div>
               </label>
-              <div className="grid gap-2">
-                <span className="text-[13px] text-[#6E625C]">{t("meSettings.mood")}</span>
-                <div className="flex gap-2.5">
-                  {MOODS.map((m) => (
-                    <button
-                      key={m}
-                      type="button"
-                      onClick={() => setMood(m)}
-                      className="grid h-11 flex-1 place-items-center rounded-2xl border text-[20px] transition-colors"
-                      style={
-                        mood === m
-                          ? { background: "rgba(156,183,154,.5)", borderColor: "transparent" }
-                          : { background: "rgba(255,255,255,.4)", borderColor: "var(--border)" }
-                      }
-                      aria-pressed={mood === m}
-                    >
-                      {m}
-                    </button>
-                  ))}
+
+              <label className="grid gap-2">
+                <span className="text-[13px] text-[#6E625C]">{t("meSettings.height")}</span>
+                <div className="flex items-center gap-2 rounded-2xl border border-border bg-white/60 px-4 py-3">
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    value={heightCm}
+                    onChange={(e) => setHeightCm(e.target.value)}
+                    placeholder="—"
+                    className="w-full bg-transparent text-[15px] outline-none"
+                  />
+                  <span className="text-[13px] text-muted-foreground">cm</span>
                 </div>
-              </div>
+              </label>
             </section>
           ) : (
             <section className="lorest-card lorest-card-strong grid gap-4 p-[18px]">

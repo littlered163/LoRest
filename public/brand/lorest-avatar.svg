@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">荷眠 LoRest avatar</title>
+  <desc id="desc">A square avatar based on the LoRest home screen: soft green aura, lotus leaf motif, and sleep ring.</desc>
+  <defs>
+    <radialGradient id="page-bg" cx="50%" cy="38%" r="70%">
+      <stop offset="0%" stop-color="#FBFFF8"/>
+      <stop offset="58%" stop-color="#EEF1E9"/>
+      <stop offset="100%" stop-color="#E4EADD"/>
+    </radialGradient>
+    <radialGradient id="inner-glow" cx="45%" cy="35%" r="58%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.96"/>
+      <stop offset="48%" stop-color="#FFFCF8" stop-opacity="0.74"/>
+      <stop offset="100%" stop-color="#9CB79A" stop-opacity="0.3"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="254" y1="172" x2="764" y2="826" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9CB79A"/>
+      <stop offset="0.56" stop-color="#E4CDA0"/>
+      <stop offset="1" stop-color="#AEC2CE"/>
+    </linearGradient>
+    <radialGradient id="leaf-fill" cx="50%" cy="46%" r="58%">
+      <stop offset="0%" stop-color="#BFD4B8"/>
+      <stop offset="72%" stop-color="#9CB79A"/>
+      <stop offset="100%" stop-color="#6E8F6A"/>
+    </radialGradient>
+    <filter id="soft-shadow" x="124" y="124" width="776" height="776" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="42" stdDeviation="52" flood-color="#8B6957" flood-opacity="0.13"/>
+    </filter>
+    <filter id="orb-blur" x="-80" y="-80" width="1184" height="1184" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="44"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" rx="228" fill="url(#page-bg)"/>
+  <g filter="url(#orb-blur)" opacity="0.48">
+    <circle cx="210" cy="360" r="176" fill="#9CB79A"/>
+    <circle cx="834" cy="430" r="160" fill="#AEC2CE"/>
+    <circle cx="548" cy="798" r="170" fill="#6E8F6A"/>
+  </g>
+
+  <g filter="url(#soft-shadow)">
+    <circle cx="512" cy="512" r="366" fill="#9CB79A" opacity="0.08"/>
+    <circle cx="512" cy="512" r="292" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="50"/>
+    <circle cx="512" cy="512" r="292" fill="none" stroke="url(#ring)" stroke-width="50" stroke-linecap="round" stroke-dasharray="1460 376" transform="rotate(-90 512 512)"/>
+    <circle cx="512" cy="512" r="192" fill="url(#inner-glow)"/>
+    <g fill="#5F554F" text-anchor="middle">
+      <text x="512" y="500" font-family="'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', SimSun, serif" font-size="118" font-weight="700">荷眠</text>
+      <text x="512" y="598" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="70" font-weight="700" letter-spacing="2">LoRest</text>
+    </g>
+  </g>
+</svg>

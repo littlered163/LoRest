@@ -1,0 +1,1 @@
+ALTER TABLE "pregnancy_profiles" ADD COLUMN "height_cm" numeric(5, 1);

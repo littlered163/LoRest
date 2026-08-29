@@ -81,8 +81,52 @@ export const STAGE_COLORS: Record<StageKind, string> = {
 };
 
 // ---- Pregnancy reference data (derived from week; not user-owned) ----
-export const TOTAL_WEEKS = 40;
+export const TOTAL_WEEKS = 40; // pregnancy is full-term / due at week 40
+export const MAX_WEEK = 42; // recording continues past due (post-term) until delivery
 export const DEFAULT_DUE_DATE = "12月17日";
+
+export function startOfDay(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+/**
+ * Current gestational week from LMP (last menstrual period / pregnancy start).
+ * Every completed 7-day window advances the week; clamped to the recordable range.
+ */
+export function weekFromLMP(lmp: string, now = new Date()): number {
+  const days = Math.floor((startOfDay(now).getTime() - startOfDay(new Date(lmp)).getTime()) / 86400000);
+  return Math.min(MAX_WEEK, Math.max(4, Math.floor(days / 7)));
+}
+
+/** Due date (LMP + 280 days) formatted as "M月D日", matching the legacy display. */
+export function dueDateFromLMP(lmp: string): string {
+  const due = new Date(new Date(lmp).getTime() + TOTAL_WEEKS * 7 * 86400000);
+  return `${due.getMonth() + 1}月${due.getDate()}日`;
+}
+
+/**
+ * Week a given date falls in, anchored so that "today" maps to the current week.
+ * Each full 7-day window ahead of / behind today shifts the week by one.
+ */
+export function weekOfDate(week: number, date: Date, now = new Date()): number {
+  const today = startOfDay(now);
+  const day = startOfDay(date);
+  const diffDays = Math.round((day.getTime() - today.getTime()) / 86400000);
+  const weeksAhead = Math.floor(diffDays / 7);
+  return Math.min(MAX_WEEK, Math.max(4, week + weeksAhead));
+}
+
+/**
+ * Estimated remaining days to due for a given date. The due date is derived from
+ * the current week (today + remaining weeks × 7 days), matching the existing
+ * `weekInfo` arithmetic rather than a real calendar date.
+ */
+export function daysToDueForDate(week: number, date: Date, now = new Date()): number {
+  const today = startOfDay(now);
+  const day = startOfDay(date);
+  const due = today.getTime() + (TOTAL_WEEKS - week) * 7 * 86400000;
+  return Math.round((due - day.getTime()) / 86400000);
+}
 
 export interface WeekInfo {
   daysToDue: number;
@@ -275,6 +319,40 @@ export function weekAdvice(week: number, zh: boolean): { title: string; pill: st
 // ---- Companion breathing config ----
 export type SoundKey = "forest" | "rain" | "water" | "night";
 export const SOUNDS: SoundKey[] = ["forest", "rain", "water", "night"];
+
+/** Real ambient recordings, served from /public/sounds (Mixkit, free license). */
+export const SOUND_ASSETS: Record<SoundKey, string> = {
+  forest: "/sounds/forest.mp3",
+  rain: "/sounds/rain.mp3",
+  water: "/sounds/water.mp3",
+  night: "/sounds/night.mp3",
+};
+
+/** One guidance line of the breathing exercise. */
+export type BreathLineKey = "intro" | "inhale" | "hold" | "exhale" | "done";
+
+/**
+ * Prerecorded gentle-neural guidance (Xiaoxiao 晓晓 for zh, Jenny for en).
+ * Generated once with edge-tts; using real audio instead of speechSynthesis so
+ * the voice plays identically everywhere — including WeChat's in-app browser,
+ * where the Web Speech API is unreliable or silent.
+ */
+export const VOICE_ASSETS: Record<"zh" | "en", Record<BreathLineKey, string>> = {
+  zh: {
+    intro: "/sounds/voice/zh-intro.mp3",
+    inhale: "/sounds/voice/zh-inhale.mp3",
+    hold: "/sounds/voice/zh-hold.mp3",
+    exhale: "/sounds/voice/zh-exhale.mp3",
+    done: "/sounds/voice/zh-done.mp3",
+  },
+  en: {
+    intro: "/sounds/voice/en-intro.mp3",
+    inhale: "/sounds/voice/en-inhale.mp3",
+    hold: "/sounds/voice/en-hold.mp3",
+    exhale: "/sounds/voice/en-exhale.mp3",
+    done: "/sounds/voice/en-done.mp3",
+  },
+};
 
 export const BREATH_PHASES = [
   { key: "inhale", seconds: 4 },

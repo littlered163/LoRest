@@ -11,6 +11,8 @@ import {
   SOUNDS,
   type SoundKey,
 } from "@/lib/lorest/sleep";
+import { useBreathVoice } from "@/lib/lorest/use-breath-voice";
+import { useSoundPlayer } from "@/lib/lorest/use-sound-player";
 
 const SOUND_ICONS: Record<SoundKey, typeof Trees> = {
   forest: Trees,
@@ -22,14 +24,20 @@ const SOUND_ICONS: Record<SoundKey, typeof Trees> = {
 type Phase = "inhale" | "hold" | "exhale";
 
 export default function CompanionPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const zh = (i18n.resolvedLanguage || i18n.language).startsWith("zh");
 
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState(false);
   const [round, setRound] = useState(1);
   const [phaseIdx, setPhaseIdx] = useState(0);
-  const [activeSound, setActiveSound] = useState<SoundKey | null>(null);
+  const { active: activeSound, toggle: toggleSound } = useSoundPlayer();
+  const { play: playBreath, stop: stopBreathVoice } = useBreathVoice(zh ? "zh-CN" : "en-US");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // The warm opening line plays first; phase cues wait until it ends so the
+  // intro is never cut short. The intro already guides the first inhale, so
+  // that first cue is naturally skipped.
+  const introDone = useRef(false);
 
   const clear = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
@@ -41,11 +49,17 @@ export default function CompanionPage() {
     setRunning(false);
     setRound(1);
     setPhaseIdx(0);
-  }, [clear]);
+    stopBreathVoice();
+  }, [clear, stopBreathVoice]);
 
   useEffect(() => {
     if (!running) return;
     const phase = BREATH_PHASES[phaseIdx];
+    // Warm prerecorded cues; they wait for the intro to finish so the opening
+    // line is never cut short (and it already guides the first inhale).
+    if (introDone.current) {
+      playBreath(phase.key);
+    }
     timer.current = setTimeout(() => {
       if (phaseIdx < BREATH_PHASES.length - 1) {
         setPhaseIdx((p) => p + 1);
@@ -57,12 +71,16 @@ export default function CompanionPage() {
         setDone(true);
         setRound(1);
         setPhaseIdx(0);
+        playBreath("done");
       }
     }, phase.seconds * 1000);
     return clear;
-  }, [running, phaseIdx, round, clear]);
+  }, [running, phaseIdx, round, clear, playBreath]);
 
   useEffect(() => () => clear(), [clear]);
+
+  // Cut off the voice + any playing sound when leaving the page.
+  useEffect(() => () => stopBreathVoice(), [stopBreathVoice]);
 
   const phase = BREATH_PHASES[phaseIdx];
   const phaseKey = phase.key as Phase;
@@ -74,10 +92,15 @@ export default function CompanionPage() {
       : t("companion.breathReady");
 
   function start() {
+    introDone.current = false;
     setDone(false);
     setRound(1);
     setPhaseIdx(0);
     setRunning(true);
+    // Warm opening line; phase cues wait for this to finish.
+    playBreath("intro", () => {
+      introDone.current = true;
+    });
   }
 
   return (
@@ -149,7 +172,7 @@ export default function CompanionPage() {
               <button
                 key={key}
                 type="button"
-                onClick={() => setActiveSound(on ? null : key)}
+                onClick={() => toggleSound(key)}
                 data-el="companion-sound-item"
                 className="grid place-items-center gap-1.5 rounded-2xl px-2 py-3.5 transition-colors"
                 style={on ? { background: "rgba(156,183,154,.45)" } : { background: "rgba(255,252,247,.5)" }}

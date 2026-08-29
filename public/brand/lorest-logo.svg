@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="240" viewBox="0 0 720 240" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">荷眠 LoRest logo</title>
+  <desc id="desc">A soft green lotus leaf mark with the 荷眠 LoRest wordmark.</desc>
+  <defs>
+    <radialGradient id="mark-bg" cx="45%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#FBFFF8"/>
+      <stop offset="58%" stop-color="#C4D8BC"/>
+      <stop offset="100%" stop-color="#8FB287"/>
+    </radialGradient>
+    <linearGradient id="leaf-line" x1="42" y1="156" x2="143" y2="71" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F5FBF1"/>
+    </linearGradient>
+    <filter id="mark-shadow" x="12" y="16" width="168" height="168" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#6E8F6A" flood-opacity="0.18"/>
+    </filter>
+    <filter id="line-soften" x="31" y="58" width="133" height="105" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="0.25"/>
+    </filter>
+  </defs>
+
+  <rect width="720" height="240" rx="48" fill="#EEF1E9"/>
+  <g filter="url(#mark-shadow)">
+    <circle cx="96" cy="100" r="72" fill="url(#mark-bg)"/>
+    <path
+      d="M57 137C62.7 111.2 83.7 94.6 133 72C128.8 103.2 114.7 125.4 89.7 132.1C78.3 135.2 67.4 134.2 57 137Z"
+      fill="none"
+      stroke="url(#leaf-line)"
+      stroke-width="9"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#line-soften)"
+    />
+    <path
+      d="M70 125C86.4 106.4 103.1 94.5 128 83.2"
+      stroke="#FFFFFF"
+      stroke-width="5.5"
+      stroke-linecap="round"
+      opacity="0.72"
+      filter="url(#line-soften)"
+    />
+  </g>
+
+  <g fill="#5F554F">
+    <text x="204" y="100" font-family="'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', SimSun, serif" font-size="58" font-weight="700" letter-spacing="3">荷眠</text>
+    <text x="208" y="149" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="38" font-weight="650" letter-spacing="1.6">LoRest</text>
+  </g>
+  <path d="M208 168H444" stroke="#AEC2CE" stroke-width="4" stroke-linecap="round" opacity="0.62"/>
+  <text x="208" y="196" fill="#776C66" font-family="'PingFang SC', 'Microsoft YaHei', Arial, sans-serif" font-size="18" letter-spacing="4">孕期智能睡眠支持</text>
+</svg>

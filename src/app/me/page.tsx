@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
-import { DEFAULT_DUE_DATE, displayName } from "@/lib/lorest/sleep";
+import { displayName } from "@/lib/lorest/sleep";
 import { fetchProfile } from "@/lib/api";
 
 export default function MePage() {
@@ -24,7 +24,7 @@ export default function MePage() {
   const name = displayName(user);
 
   const [week, setWeek] = useState(24);
-  const [dueDate, setDueDate] = useState(DEFAULT_DUE_DATE);
+  const [dueDate, setDueDate] = useState("");
 
   useEffect(() => {
     if (!user) return;

@@ -22,6 +22,27 @@
       "when": 1787929307163,
       "tag": "0002_lying_swarm",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788011569976,
+      "tag": "0003_complete_vertigo",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788011587707,
+      "tag": "0004_slim_clea",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788014078145,
+      "tag": "0005_eager_vanisher",
+      "breakpoints": true
     }
   ]
 }

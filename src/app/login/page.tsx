@@ -62,21 +62,19 @@ function LorestLeafMark() {
 async function warmDemoData(token: string) {
   const headers = { "x-lorest-session": token, "content-type": "application/json" };
   await fetch("/api/user/profile", { headers });
+  // Pregnancy start = 28 weeks ago (today − 196 days), so the demo lands at week 28.
+  const lmp = new Date(Date.now() - 28 * 7 * 86400000);
+  const lmpIso = `${lmp.getFullYear()}-${String(lmp.getMonth() + 1).padStart(2, "0")}-${String(lmp.getDate()).padStart(2, "0")}`;
   await fetch("/api/pregnancy/profile", {
     method: "PATCH",
     headers,
     body: JSON.stringify({
-      week: 28,
-      dueDate: "2026-11-18",
-      weightKg: "62.5",
-      mood: "calm",
+      pregnancyStartDate: lmpIso,
+      initialWeightKg: "58",
+      heightCm: "165",
       onboarded: true,
     }),
   });
-  await Promise.all([
-    fetch("/api/pregnancy/todos", { headers }),
-    fetch("/api/pregnancy/checkups", { headers }),
-  ]);
   const deviceRes = await fetch("/api/devices", { headers });
   const deviceJson = (await deviceRes.json().catch(() => null)) as {
     devices?: unknown[];

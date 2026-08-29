@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">荷眠 LoRest icon</title>
+  <desc id="desc">A soft green lotus leaf mark for 荷眠 LoRest.</desc>
+  <defs>
+    <radialGradient id="mark-bg" cx="45%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#FBFFF8"/>
+      <stop offset="58%" stop-color="#C4D8BC"/>
+      <stop offset="100%" stop-color="#8FB287"/>
+    </radialGradient>
+    <linearGradient id="leaf-line" x1="76" y1="172" x2="177" y2="87" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F5FBF1"/>
+    </linearGradient>
+    <filter id="mark-shadow" x="23" y="26" width="210" height="210" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#6E8F6A" flood-opacity="0.18"/>
+    </filter>
+    <filter id="line-soften" x="65" y="74" width="133" height="105" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="0.25"/>
+    </filter>
+  </defs>
+
+  <rect width="256" height="256" rx="56" fill="#EEF1E9"/>
+  <g filter="url(#mark-shadow)">
+    <circle cx="128" cy="128" r="88" fill="url(#mark-bg)"/>
+    <path
+      d="M89 165C94.7 139.2 115.7 122.6 165 100C160.8 131.2 146.7 153.4 121.7 160.1C110.3 163.2 99.4 162.2 89 165Z"
+      fill="none"
+      stroke="url(#leaf-line)"
+      stroke-width="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#line-soften)"
+    />
+    <path
+      d="M102 153C118.4 134.4 135.1 122.5 160 111.2"
+      stroke="#FFFFFF"
+      stroke-width="6"
+      stroke-linecap="round"
+      opacity="0.72"
+      filter="url(#line-soften)"
+    />
+  </g>
+</svg>
