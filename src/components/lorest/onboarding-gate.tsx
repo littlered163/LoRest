@@ -19,6 +19,7 @@ export function OnboardingGate() {
       router.replace("/login");
       return;
     }
+    if (user.id.startsWith("roadshow-demo-")) return;
 
     if (checkedUserId.current === user.id) return;
     checkedUserId.current = user.id;

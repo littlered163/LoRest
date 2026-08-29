@@ -24,7 +24,7 @@ export function ScreenShell({
         className="relative min-h-[100svh]"
         style={{
           paddingTop: "var(--safe-top)",
-          paddingBottom: withNav ? "calc(var(--safe-bottom) + 108px)" : "var(--safe-bottom)",
+          paddingBottom: withNav ? "calc(var(--safe-bottom) + 156px)" : "var(--safe-bottom)",
           isolation: "isolate",
         }}
       >

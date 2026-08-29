@@ -138,6 +138,79 @@ export const WEEK_TIPS: WeekTip[] = [
   },
 ];
 
+export function weekTips(week: number): WeekTip[] {
+  if (week < 13) {
+    return [
+      {
+        id: "early-rest",
+        titleZh: "优先保证休息",
+        titleEn: "Prioritize rest",
+        bodyZh: "孕早期更容易疲惫，白天可以安排短休，睡前减少屏幕刺激。",
+        bodyEn: "Fatigue is common early on. Add short rests and reduce screen time before bed.",
+      },
+      {
+        id: "nausea",
+        titleZh: "少量多餐",
+        titleEn: "Small frequent meals",
+        bodyZh: "睡前避免过饱，可以准备苏打饼干或温水，缓解夜间反胃。",
+        bodyEn: "Avoid heavy meals before bed; crackers or warm water may ease nausea.",
+      },
+    ];
+  }
+  if (week < 24) {
+    return [
+      {
+        id: "movement",
+        titleZh: "保持温和活动",
+        titleEn: "Keep gentle movement",
+        bodyZh: "每天散步 20 到 30 分钟，有助于循环和夜间入睡。",
+        bodyEn: "A 20 to 30 minute walk supports circulation and sleep onset.",
+      },
+      {
+        id: "side-sleep",
+        titleZh: "练习侧卧睡姿",
+        titleEn: "Practice side-sleeping",
+        bodyZh: "可以在双腿间垫孕妇枕，减轻腰背牵拉感。",
+        bodyEn: "A pillow between your knees can ease back and hip tension.",
+      },
+    ];
+  }
+  if (week < 32) {
+    return [
+      {
+        id: "left-side",
+        titleZh: "左侧卧更安心",
+        titleEn: "Left-side rest helps",
+        bodyZh: "孕中后期推荐左侧卧，能减轻下腔静脉受压，改善胎盘供血。",
+        bodyEn: "Left-side sleeping can reduce vena cava pressure and support placental blood flow.",
+      },
+      {
+        id: "calcium",
+        titleZh: "关注腿抽筋",
+        titleEn: "Watch leg cramps",
+        bodyZh: "睡前轻柔拉伸小腿，按医嘱补充钙和维生素 D。",
+        bodyEn: "Gentle calf stretches before bed may help; follow your clinician's supplement guidance.",
+      },
+    ];
+  }
+  return [
+    {
+      id: "swelling",
+      titleZh: "缓解水肿",
+      titleEn: "Ease swelling",
+      bodyZh: "睡前把双腿稍微垫高，减少久坐久站，白天保持适量饮水。",
+      bodyEn: "Elevate your legs before bed, avoid long standing, and hydrate during the day.",
+    },
+    {
+      id: "birth-bag",
+      titleZh: "准备待产包",
+      titleEn: "Prepare the birth bag",
+      bodyZh: "把证件、产检资料、哺乳用品和新生儿衣物放在固定位置。",
+      bodyEn: "Keep documents, checkup records, feeding supplies, and newborn clothes ready.",
+    },
+  ];
+}
+
 // ---- Today page: week-based care advice ----
 interface WeekAdviceEntry {
   minWeek: number;

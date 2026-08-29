@@ -11,12 +11,17 @@ import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
 const DEMO_USER: User = {
   id: "roadshow-demo-01",
   email: "demo@lorest.lialab.cn",
-  name: "路演体验官",
+  name: "林安安",
   avatarUrl: null,
 };
 
 function makeToken(user: User): string {
-  return btoa(JSON.stringify(user));
+  const bytes = new TextEncoder().encode(JSON.stringify(user));
+  let binary = "";
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
 }
 
 function LorestLeafMark() {
@@ -72,6 +77,21 @@ async function warmDemoData(token: string) {
     fetch("/api/pregnancy/todos", { headers }),
     fetch("/api/pregnancy/checkups", { headers }),
   ]);
+  const deviceRes = await fetch("/api/devices", { headers });
+  const deviceJson = (await deviceRes.json().catch(() => null)) as {
+    devices?: unknown[];
+  } | null;
+  if (!deviceJson?.devices?.length) {
+    await fetch("/api/devices", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        name: "荷眠智能床垫",
+        model: "LoRest Z1",
+        bluetoothName: "LoRest-Z1-Anan",
+      }),
+    });
+  }
 }
 
 export default function LoginPage() {
@@ -84,15 +104,11 @@ export default function LoginPage() {
     if (!loading && user) router.replace("/");
   }, [user, loading, router]);
 
-  async function startDemo() {
+  function startDemo() {
     setBusy(true);
     const token = makeToken(DEMO_USER);
     login(DEMO_USER, token);
-    try {
-      await warmDemoData(token);
-    } catch {
-      // The demo can still run with deterministic local sleep data if seeding is slow.
-    }
+    warmDemoData(token).catch(() => {});
     router.replace("/");
   }
 
@@ -114,7 +130,7 @@ export default function LoginPage() {
           <h1 className="font-heading mt-7 text-[28px] font-semibold leading-[1.2] text-[#5F554F]">
             {t("login.title")}
           </h1>
-          <p className="mt-3 max-w-[19rem] text-[14px] leading-[1.7] text-[#776C66]">
+          <p className="mt-3 max-w-[calc(100vw-32px)] whitespace-nowrap text-center text-[clamp(12px,3vw,14px)] leading-[1.7] text-[#776C66]">
             {t("login.subtitle")}
           </p>
 
@@ -131,10 +147,10 @@ export default function LoginPage() {
           </ul>
         </div>
 
-        <div className="grid gap-3 pb-8" data-el="login-demo-entry">
+        <div className="grid gap-3 pb-8 pt-8" data-el="login-demo-entry">
           <button
             type="button"
-            onClick={() => void startDemo()}
+            onClick={startDemo}
             disabled={busy}
             className="flex w-full items-center justify-center rounded-full py-3.5 text-[15px] font-semibold text-white transition-opacity disabled:opacity-60"
             style={{
@@ -144,9 +160,6 @@ export default function LoginPage() {
           >
             {busy ? t("login.demoEntering") : t("login.demoStart")}
           </button>
-          <p className="mt-1 text-center text-[12px] leading-[1.6] text-muted-foreground">
-            {t("login.demoHint")}
-          </p>
         </div>
       </div>
     </ScreenShell>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BedDouble, ChevronRight, Cloud, Moon, Waves } from "lucide-react";
+import { BedDouble, ChevronRight, Cloud, Moon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
@@ -114,7 +114,7 @@ export default function TodayPage() {
           <Link
             href="/report"
             data-el="today-summary"
-            className="lorest-card lorest-card-strong mt-3 block p-[18px]"
+            className={`lorest-card lorest-card-strong mt-3 block p-[18px] ${profile && info ? "" : "mb-12"}`}
           >
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0">
@@ -167,7 +167,7 @@ export default function TodayPage() {
         <Link
           href="/pregnancy"
           data-el="today-pregnancy"
-          className="lorest-card lorest-card-strong mt-3 flex items-center gap-3 p-[18px]"
+          className="lorest-card lorest-card-strong mt-3 mb-12 flex items-center gap-3 p-[18px]"
         >
           <div className="min-w-0 flex-1">
             <div className="text-[12px] text-muted-foreground">{t("today.progressTitle")}</div>
@@ -187,26 +187,7 @@ export default function TodayPage() {
         </Link>
       )}
 
-      <Link href="/companion" className="lorest-card flex items-center justify-between gap-4 mt-3 p-4" data-el="today-companion">
-        <div>
-          <h3 className="font-heading text-[16px]">{t("today.companionTitle")}</h3>
-          <div className="mt-1 flex items-center gap-1.5 text-[13px] text-[#6E625C]">
-            <Waves className="h-3.5 w-3.5" aria-hidden />
-            {t("today.companionSub")}
-          </div>
-        </div>
-        <span
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-full"
-          style={{
-            background: "radial-gradient(circle,#fff,#9CB79A 62%,#E4CDA0)",
-            boxShadow: "0 0 28px rgba(156,183,154,.7)",
-            animation: "lorest-breathe 4.7s var(--lorest-ease) infinite alternate",
-          }}
-          aria-hidden
-        >
-          <Moon className="h-5 w-5 text-white/90" />
-        </span>
-      </Link>
+      <div className="h-24" aria-hidden />
     </ScreenShell>
   );
 }

@@ -98,7 +98,7 @@
   },
   "login": {
     "title": "Welcome back to LoRest",
-    "subtitle": "Sign in to sync your sleep reports and pregnancy records, so your companion is always with you.",
+    "subtitle": "Redefining pregnancy sleep, with gentle care through every night.",
     "perk1": "See nightly sleep reports and trends",
     "perk2": "Track pregnancy progress and checkups",
     "perk3": "Sync across devices — never lose your data",
@@ -194,6 +194,7 @@
     "noDeviceData": "Connect your mattress to see sleep data",
     "noDataSignIn": "Sign in and connect your mattress to see sleep data",
     "noDataDevice": "Connect your mattress to see sleep data",
+    "companionTitle": "Bedtime rest",
     "companionSub": "Forest sounds · 4-7-8 breathing",
     "companionGo": "Open",
     "deviceConnected": "Mattress connected",
@@ -250,7 +251,8 @@
     "weekSelector": "Choose week",
     "recordTitle": "Quick log",
     "recordWeight": "Weight",
-    "recordMood": "Mood"
+    "recordMood": "Mood",
+    "checkupEmpty": "No check-up records yet"
   },
   "companion": {
     "title": "Bedtime rest",

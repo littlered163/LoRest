@@ -4,6 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth/local-auth";
 import { fetchDevices, syncDeviceApi, type DeviceDto } from "@/lib/api";
 
+function demoDevice(): DeviceDto {
+  return {
+    id: "roadshow-demo-mattress",
+    name: "荷眠智能床垫",
+    model: "LoRest Z1",
+    bluetoothName: "LoRest-Z1-Anan",
+    online: true,
+    lastSyncAt: new Date().toISOString(),
+  };
+}
+
 /**
  * Loads the signed-in user's paired devices. If the primary device is online,
  * it triggers a one-shot auto-sync (refreshes lastSyncAt) to mirror the "app
@@ -26,6 +37,9 @@ export function useDevices() {
     fetchDevices()
       .then(async (list) => {
         if (!active) return;
+        if (user.id.startsWith("roadshow-demo-") && list.length === 0) {
+          list = [demoDevice()];
+        }
         setDevices(list);
         const primary = list[0];
         if (primary?.online && syncedFor.current !== primary.id) {
@@ -42,7 +56,7 @@ export function useDevices() {
           }
         }
       })
-      .catch(() => active && setDevices([]));
+      .catch(() => active && setDevices(user.id.startsWith("roadshow-demo-") ? [demoDevice()] : []));
     return () => {
       active = false;
     };

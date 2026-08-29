@@ -98,7 +98,7 @@
   },
   "login": {
     "title": "欢迎回到荷眠",
-    "subtitle": "登录后，同步你的睡眠报告与孕期记录，让陪伴一直都在。",
+    "subtitle": "重新定义孕期睡眠，让每一次入眠都被温柔守护。",
     "perk1": "查看每晚睡眠报告与趋势",
     "perk2": "记录孕周进度与产检待办",
     "perk3": "多设备同步，换手机也不丢数据",
@@ -194,6 +194,7 @@
     "noDeviceData": "连接床垫后即可查看睡眠数据",
     "noDataSignIn": "登录后连接床垫，查看睡眠数据",
     "noDataDevice": "连接床垫后即可查看睡眠数据",
+    "companionTitle": "睡前陪伴",
     "companionSub": "森林声 · 4-7-8 呼吸",
     "companionGo": "去陪伴",
     "deviceConnected": "床垫已连接",
@@ -250,7 +251,8 @@
     "weekSelector": "选择孕周",
     "recordTitle": "轻记录",
     "recordWeight": "体重",
-    "recordMood": "心情"
+    "recordMood": "心情",
+    "checkupEmpty": "暂无产检记录"
   },
   "companion": {
     "title": "睡前陪伴",

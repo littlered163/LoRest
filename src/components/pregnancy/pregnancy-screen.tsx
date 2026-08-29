@@ -6,8 +6,9 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth/local-auth";
 import { ScreenShell } from "@/components/lorest/screen-shell";
 import { LorestLangToggle } from "@/components/lorest/lorest-lang-toggle";
-import { TOTAL_WEEKS, WEEK_TIPS, weekInfo } from "@/lib/lorest/sleep";
+import { TOTAL_WEEKS, weekInfo, weekTips } from "@/lib/lorest/sleep";
 import {
+  addTodoApi,
   fetchCheckups,
   fetchProfile,
   fetchTodos,
@@ -31,6 +32,7 @@ export function PregnancyScreen() {
   const [mood, setMood] = useState<string | null>(null);
   const [todos, setTodos] = useState<PregnancyTodoDto[]>([]);
   const [checkups, setCheckups] = useState<CheckupDto[]>([]);
+  const [newTodo, setNewTodo] = useState("");
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -55,6 +57,7 @@ export function PregnancyScreen() {
   const loading = Boolean(user) && !loaded;
 
   const info = weekInfo(week);
+  const tips = weekTips(week);
   const progress = Math.round((week / TOTAL_WEEKS) * 100);
   const weekWindow = [week - 1, week, week + 1, week + 2].filter((w) => w >= 4 && w <= TOTAL_WEEKS);
 
@@ -66,6 +69,26 @@ export function PregnancyScreen() {
   async function onToggleTodo(id: string) {
     setTodos((prev) => prev.map((x) => (x.id === id ? { ...x, done: !x.done } : x)));
     if (user) await toggleTodoApi(id).catch(() => undefined);
+  }
+
+  async function onAddTodo() {
+    const label = newTodo.trim();
+    if (!label || !user) return;
+    setNewTodo("");
+    const optimistic: PregnancyTodoDto = {
+      id: `local-${Date.now()}`,
+      label,
+      done: false,
+      orderIndex: todos.length,
+    };
+    setTodos((prev) => [...prev, optimistic]);
+    try {
+      const saved = await addTodoApi(label);
+      setTodos((prev) => prev.map((item) => (item.id === optimistic.id ? saved : item)));
+    } catch {
+      setTodos((prev) => prev.filter((item) => item.id !== optimistic.id));
+      setNewTodo(label);
+    }
   }
 
   return (
@@ -146,7 +169,7 @@ export function PregnancyScreen() {
       <section className="lorest-card mt-4 p-[18px]" data-el="pregnancy-tips">
         <h2 className="font-heading text-[17px]">{t("pregnancy.tipsTitle")}</h2>
         <div className="mt-3 grid gap-3">
-          {WEEK_TIPS.map((tip) => (
+          {tips.map((tip) => (
             <div key={tip.id} className="rounded-2xl p-3.5" style={{ background: "rgba(255,252,247,.5)" }}>
               <div className="font-heading text-[15px]">{zh ? tip.titleZh : tip.titleEn}</div>
               <p className="mt-1 text-[13px] leading-[1.6] text-[#776C66]">{zh ? tip.bodyZh : tip.bodyEn}</p>
@@ -173,12 +196,35 @@ export function PregnancyScreen() {
             </div>
           ))}
           {!user && <EmptyHint text={t("me.signInTip")} />}
-          {user && !loading && checkups.length === 0 && <EmptyHint text={t("common.loading")} />}
+          {user && !loading && checkups.length === 0 && <EmptyHint text={t("pregnancy.checkupEmpty")} />}
         </div>
       </section>
 
       <section className="lorest-card mt-4 p-[18px]" data-el="pregnancy-todos">
         <h2 className="font-heading text-[17px]">{t("pregnancy.todoTitle")}</h2>
+        {user && (
+          <div className="mt-3 flex gap-2" data-el="pregnancy-add-record">
+            <input
+              type="text"
+              value={newTodo}
+              onChange={(e) => setNewTodo(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") void onAddTodo();
+              }}
+              placeholder={zh ? "添加本周记录或待办" : "Add this week's note or to-do"}
+              className="min-w-0 flex-1 rounded-2xl border border-border bg-white/60 px-3.5 py-2.5 text-[14px] outline-none focus:border-[#AEC2CE]"
+            />
+            <button
+              type="button"
+              onClick={() => void onAddTodo()}
+              disabled={!newTodo.trim()}
+              className="shrink-0 rounded-2xl px-4 py-2.5 text-[14px] font-semibold text-[#5F7C6A] disabled:opacity-50"
+              style={{ background: "rgba(156,183,154,.28)" }}
+            >
+              {zh ? "添加" : "Add"}
+            </button>
+          </div>
+        )}
         <div className="mt-3 grid gap-2">
           {(user ? todos : []).map((td) => (
             <button

@@ -1,15 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="55%" stop-color="#9CB79A"/>
-      <stop offset="100%" stop-color="#E4CDA0"/>
+    <radialGradient id="bg" cx="50%" cy="46%" r="58%">
+      <stop offset="0%" stop-color="#f8fff6" stop-opacity="0.96"/>
+      <stop offset="62%" stop-color="#bad4b5" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#8fb287" stop-opacity="0.95"/>
     </radialGradient>
+    <filter id="soft" x="-18%" y="-18%" width="136%" height="136%">
+      <feGaussianBlur stdDeviation="0.35"/>
+    </filter>
   </defs>
-  <circle cx="32" cy="32" r="32" fill="url(#bg)"/>
-  <path d="M32 14 C22 20 16 28 18 38 C20 46 28 50 32 50 C36 50 44 46 46 38 C48 28 42 20 32 14Z"
-        fill="white" fill-opacity="0.88"/>
-  <path d="M32 14 L32 50" stroke="white" stroke-width="1.5" stroke-opacity="0.5"/>
-  <path d="M32 26 C27 29 22 33 20 38" stroke="white" stroke-width="1.2" stroke-opacity="0.4" stroke-linecap="round"/>
-  <path d="M32 26 C37 29 42 33 44 38" stroke="white" stroke-width="1.2" stroke-opacity="0.4" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="27" fill="url(#bg)"/>
+  <path
+    d="M22 42C24.2 32.3 31.8 28.5 42 24.1C41.2 31.8 38 38.6 30.7 40.6C27.6 41.4 24.7 41.3 22 42Z"
+    stroke="white"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    filter="url(#soft)"
+  />
+  <path
+    d="M22 42C27.4 36.2 33.2 32.8 40.7 29.4"
+    stroke="white"
+    stroke-width="3"
+    stroke-linecap="round"
+    filter="url(#soft)"
+  />
 </svg>

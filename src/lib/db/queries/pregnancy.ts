@@ -90,6 +90,15 @@ export async function toggleTodo(userId: string, id: string): Promise<PregnancyT
   return rows[0];
 }
 
+export async function addPregnancyTodo(userId: string, label: string): Promise<PregnancyTodo> {
+  const existing = await getTodos(userId);
+  const rows = await db
+    .insert(pregnancyTodos)
+    .values({ userId, label, orderIndex: existing.length })
+    .returning();
+  return rows[0];
+}
+
 export async function getCheckups(userId: string): Promise<Checkup[]> {
   const rows = await db
     .select()

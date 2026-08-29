@@ -55,6 +55,17 @@ export async function fetchTodos(): Promise<PregnancyTodoDto[]> {
   return data.todos;
 }
 
+export async function addTodoApi(label: string): Promise<PregnancyTodoDto> {
+  const res = await request("/api/pregnancy/todos", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ label }),
+  });
+  if (!res.ok) throw new Error("failed to add todo");
+  const data = (await res.json()) as { todo: PregnancyTodoDto };
+  return data.todo;
+}
+
 export async function toggleTodoApi(id: string): Promise<PregnancyTodoDto> {
   const res = await request("/api/pregnancy/todos", {
     method: "PATCH",
