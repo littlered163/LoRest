@@ -93,7 +93,8 @@
     "reconnect": "重新连接",
     "calibrate": "校准床垫",
     "unbind": "解绑设备",
-    "envNote": "以上为床垫整夜采集的环境读数，仅供参考。"
+    "envNote": "以上为床垫整夜采集的环境读数，仅供参考。",
+    "noEnvData": "连接床垫后，这里将显示室温与湿度读数。"
   },
   "login": {
     "title": "欢迎回到荷眠",
@@ -179,7 +180,9 @@
     "adviceBody": "午后小憩 18 分钟，今晚约 24℃ 更好眠。",
     "progressTitle": "孕期进度",
     "progressDue": "距离预产期 {{days}} 天",
-    "companionTitle": "睡前陪伴",
+    "noDeviceData": "连接床垫后即可查看睡眠数据",
+    "noDataSignIn": "登录后连接床垫，查看睡眠数据",
+    "noDataDevice": "连接床垫后即可查看睡眠数据",
     "companionSub": "森林声 · 4-7-8 呼吸",
     "companionGo": "去陪伴",
     "deviceConnected": "床垫已连接",

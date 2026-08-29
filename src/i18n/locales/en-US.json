@@ -93,7 +93,8 @@
     "reconnect": "Reconnect",
     "calibrate": "Calibrate mattress",
     "unbind": "Unbind device",
-    "envNote": "These are overnight environment readings from the mattress, for reference only."
+    "envNote": "These are overnight environment readings from the mattress, for reference only.",
+    "noEnvData": "Connect your mattress to see room temperature and humidity readings."
   },
   "login": {
     "title": "Welcome back to LoRest",
@@ -179,7 +180,9 @@
     "adviceBody": "An 18-minute afternoon nap; keep the room near 24℃ tonight.",
     "progressTitle": "Pregnancy progress",
     "progressDue": "{{days}} days to due date",
-    "companionTitle": "Bedtime rest",
+    "noDeviceData": "Connect your mattress to see sleep data",
+    "noDataSignIn": "Sign in and connect your mattress to see sleep data",
+    "noDataDevice": "Connect your mattress to see sleep data",
     "companionSub": "Forest sounds · 4-7-8 breathing",
     "companionGo": "Open",
     "deviceConnected": "Mattress connected",

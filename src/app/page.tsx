@@ -19,6 +19,7 @@ export default function TodayPage() {
   const name = displayName(user);
   const { primary, syncing } = useDevices();
   const online = primary?.online ?? false;
+  const hasData = Boolean(user && primary && online);
 
   return (
     <ScreenShell label="荷眠今日">
@@ -71,55 +72,67 @@ export default function TodayPage() {
         <ChevronRight className="h-[18px] w-[18px] shrink-0 text-[#B7ADA6]" aria-hidden />
       </Link>
 
-      <section className="grid place-items-center" data-el="today-hero">
-        <ScoreRing
-          score={SLEEP.score}
-          label={t("today.scoreLabel")}
-          onClick={() => router.push("/report")}
-        />
-      </section>
+      {hasData ? (
+        <>
+          <section className="grid place-items-center" data-el="today-hero">
+            <ScoreRing
+              score={SLEEP.score}
+              label={t("today.scoreLabel")}
+              onClick={() => router.push("/report")}
+            />
+          </section>
 
-      <Link
-        href="/report"
-        data-el="today-summary"
-        className="lorest-card lorest-card-strong mt-3 block p-[18px]"
-      >
-        <div className="flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <div className="text-[12px] text-muted-foreground">{t("today.sleepDurationLabel")}</div>
-            <div
-              className="font-heading mt-1 text-[26px] font-bold leading-none text-[#5F554F]"
-              style={{ letterSpacing: "-.03em" }}
-            >
-              {formatHm(SLEEP.totalSleepMinutes, zh)}
+          <Link
+            href="/report"
+            data-el="today-summary"
+            className="lorest-card lorest-card-strong mt-3 block p-[18px]"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <div className="text-[12px] text-muted-foreground">{t("today.sleepDurationLabel")}</div>
+                <div
+                  className="font-heading mt-1 text-[26px] font-bold leading-none text-[#5F554F]"
+                  style={{ letterSpacing: "-.03em" }}
+                >
+                  {formatHm(SLEEP.totalSleepMinutes, zh)}
+                </div>
+              </div>
+              <span
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full"
+                style={{ background: "rgba(174,194,206,.28)" }}
+                aria-hidden
+              >
+                <Moon className="h-5 w-5 text-[#6E8BA0]" />
+              </span>
             </div>
-          </div>
-          <span
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-full"
-            style={{ background: "rgba(174,194,206,.28)" }}
-            aria-hidden
-          >
-            <Moon className="h-5 w-5 text-[#6E8BA0]" />
-          </span>
-        </div>
 
-        <div className="my-3.5 h-px" style={{ background: "rgba(150,132,120,.14)" }} aria-hidden />
+            <div className="my-3.5 h-px" style={{ background: "rgba(150,132,120,.14)" }} aria-hidden />
 
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="font-heading text-[18px] font-semibold leading-[1.25]">
-            {t("today.adviceTitle")}
-          </h2>
-          <span
-            className="whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs text-[#7A6E66]"
-            style={{ background: "rgba(156,183,154,.34)" }}
-          >
-            {t("today.advicePill")}
-          </span>
-        </div>
-        <p className="mt-2.5 text-[14px] leading-[1.65] text-[#776C66]">
-          {t("today.adviceBody")}
-        </p>
-      </Link>
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="font-heading text-[18px] font-semibold leading-[1.25]">
+                {t("today.adviceTitle")}
+              </h2>
+              <span
+                className="whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs text-[#7A6E66]"
+                style={{ background: "rgba(156,183,154,.34)" }}
+              >
+                {t("today.advicePill")}
+              </span>
+            </div>
+            <p className="mt-2.5 text-[14px] leading-[1.65] text-[#776C66]">
+              {t("today.adviceBody")}
+            </p>
+          </Link>
+        </>
+      ) : (
+        <section className="grid place-items-center" data-el="today-hero">
+          <ScoreRing
+            score={0}
+            label={!user ? t("today.noDataSignIn") : t("today.noDataDevice")}
+            empty
+          />
+        </section>
+      )}
 
       <Link href="/companion" className="lorest-card flex items-center justify-between gap-4 mt-4 p-4" data-el="today-companion">
         <div>
